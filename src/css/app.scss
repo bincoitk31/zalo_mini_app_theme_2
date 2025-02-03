@@ -1,0 +1,28 @@
+@import './product.scss';
+@import './cart.scss';
+
+#app {
+  font-size: 14px;
+}
+
+.body {
+  font-size: 12px;
+  background: #ffffff;
+}
+
+.section-container {
+  padding: 16px;
+  background: #ffffff;
+  margin-bottom: 24px;
+}
+
+.zaui-list-item {
+  cursor: pointer;
+}
+
+.custom-drawer {
+  border-radius: 8px;
+  .ant-drawer-body {
+    padding: 0px
+  }
+}

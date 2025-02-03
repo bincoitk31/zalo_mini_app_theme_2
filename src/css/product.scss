@@ -1,0 +1,17 @@
+.slider-container {
+  .slick-slider {
+    overflow: hidden;
+    cursor: pointer;
+    .slick-list {
+      //display: flex;
+    }
+  }
+}
+
+.text-truncate-2-line {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 2;
+}

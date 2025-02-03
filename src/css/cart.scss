@@ -1,0 +1,29 @@
+.btn-quantity {
+  height: 30px;
+  display: flex;
+  align-items: center;
+  .btn-minus, .btn-plus {
+    background: #f2f2f2;
+    width: 30px;
+    height: 30px;
+    border: 1px solid #d9d9d9;
+    cursor: pointer;
+  }
+  .btn-disable {
+    pointer-events: none;
+    cursor: pointer;
+    .anticon {
+      opacity: 0.5;
+    }
+    
+  }
+  .quantity {
+    width: 40px;
+    text-align: center;
+    height: 100%;
+    border-top: 1px solid #d9d9d9;
+    border-bottom: 1px solid #d9d9d9;
+    border-radius: 0px;
+  }
+
+}

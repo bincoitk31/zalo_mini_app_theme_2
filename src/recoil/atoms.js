@@ -1,0 +1,521 @@
+import { atom } from "recoil"
+
+export const activeTabState = atom({
+  key: "activeTab",
+  default: "home"
+})
+
+export const carouselState = atom({
+  key: "carousel",
+  default: [
+    "https://content.pancake.vn/1/s7650x3600/fwebp/56/78/f2/25/581a49b4fb913e8fbfd37c56be7038b84d85b54e6e93276b9bee4b45.png",
+    "https://content.pancake.vn/1/s7650x3600/fwebp/70/7b/aa/18/586bc1ec14126cc878c2ec1582a594e54d2a5a08c4493c977c42400d.png",
+    "https://content.pancake.vn/1/s7650x3600/fwebp/d0/23/41/41/d23bb460d0f89d2a1b53e030efacce179b1459173989ff30d0c0acb9.png",
+  ]
+})
+
+
+
+export const productGridTestState = atom({
+  key: "productGrid",
+  default : [
+    {
+      "short_description": [],
+      "description": "kaka",
+      "is_pinned": false,
+      "lesser_compress_description": false,
+      "is_negative": true,
+      "type_design": null,
+      "bonus_products": [],
+      "product_pos_id": "8717bbe6-bcca-4b4c-beb8-bf4eca9ea0d0",
+      "allow_sitemap": false,
+      "before_product_id": null,
+      "total_sold_at": null,
+      "slug": "sp2",
+      "brand": null,
+      "created_by": "aaa528db-eff4-4072-8758-ab9d98dcc1bb",
+      "categories": [
+        {
+          "sort_type": 3,
+          "description": null,
+          "rm_if_cond_mismatch": false,
+          "type_design": null,
+          "pin_product_ids": [],
+          "slug": "sp",
+          "total_product_visible": null,
+          "right": 3,
+          "display_id": 19,
+          "meta_tags": null,
+          "is_default": false,
+          "is_hidden": false,
+          "is_design": false,
+          "is_removed": false,
+          "position": 0,
+          "pos_id": 34218,
+          "shop_id": 20003975,
+          "total_product_hidden": null,
+          "inserted_at": "2024-12-26T02:10:15",
+          "updated_at": "2024-12-26T02:10:15",
+          "parent_id": null,
+          "left": 2,
+          "prioritize_breadcrumb_display": false,
+          "image": null,
+          "product_conditions": [],
+          "site_id": "f6c62de6-d5d2-4983-9552-35052a344091",
+          "children": [],
+          "name": "sp",
+          "condition_type": "AND",
+          "last_editor_id": "aaa528db-eff4-4072-8758-ab9d98dcc1bb",
+          "suffix": 0,
+          "show_sitemap": false,
+          "id": "14599c5d-641e-4aac-9136-3dafd3f3d8dc",
+          "bottom_description": null,
+          "multi_description": [],
+          "depth": 0,
+          "name_render": null,
+          "breakpoint_images": {},
+          "total_product_pinned": null,
+          "parent_pos_id": null,
+          "pixel_data": {}
+        }
+      ],
+      "custom_id": "sp2",
+      "custom_links": [],
+      "is_runout": false,
+      "display_id": 193,
+      "meta_tags": null,
+      "inserted_at_pos": "2024-06-11T10:56:16.000000Z",
+      "allow_google_catalog": false,
+      "google_category_id": null,
+      "total_view_web": 0,
+      "is_design": false,
+      "tags": [],
+      "shop_id": 20003975,
+      "device_template_id": null,
+      "inserted_at": "2024-12-20T02:28:00.166227Z",
+      "updated_at": "2024-12-28T04:36:52.758391Z",
+      "suppliers": [],
+      "ribbons": [],
+      "image": null,
+      "site_id": "f6c62de6-d5d2-4983-9552-35052a344091",
+      "pos_display_id": 193,
+      "total_sold": 0,
+      "name": "sp2",
+      "last_editor_id": "aaa528db-eff4-4072-8758-ab9d98dcc1bb",
+      "short_link": {
+        "element_id": "83df7d5a-8aa8-4829-94fd-a44927a94110",
+        "element_type": "PRODUCT",
+        "hash": "RYRQY",
+        "id": 566990,
+        "inserted_at": "2024-12-20T02:28:00",
+        "site_id": "f6c62de6-d5d2-4983-9552-35052a344091",
+        "updated_at": "2024-12-20T02:28:00"
+      },
+      "removed": false,
+      "google_merchant_updated_at": null,
+      "id": "83df7d5a-8aa8-4829-94fd-a44927a94110",
+      "allow_facebook_catalog": false,
+      "measure_group_id": null,
+      "allow_google_merchant": false,
+      "google_merchant_product_id": null,
+      "is_pre_order": false,
+      "is_published": true,
+      "materials": [],
+      "variations": [
+        {
+          "actual_remain_quantity": 0,
+          "custom_id": "SP2S",
+          "display_id": null,
+          "fields": [
+            {
+              "name": "size",
+              "value": "s"
+            }
+          ],
+          "id": "1c47397f-45dd-47db-8aa9-30af3b2789a0",
+          "images": [
+            "https://content.pancake.vn/web-media/cf/75/84/b9/cc6cb62ae603808040b630fe737a8d010474958d98ed96f91e491818.png"
+          ],
+          "images_design": null,
+          "inserted_at": "2024-12-20T02:28:00",
+          "is_hidden": false,
+          "is_locked": false,
+          "is_pre_order": false,
+          "is_removed": false,
+          "is_wallpaper": false,
+          "last_editor_id": "aaa528db-eff4-4072-8758-ab9d98dcc1bb",
+          "original_price": 200000,
+          "original_price_by_currency": null,
+          "pending": 0,
+          "product_id": "83df7d5a-8aa8-4829-94fd-a44927a94110",
+          "product_pos_id": "8717bbe6-bcca-4b4c-beb8-bf4eca9ea0d0",
+          "remain_quantity": 11,
+          "retail_price": 100000,
+          "retail_price_by_currency": null,
+          "site_id": "f6c62de6-d5d2-4983-9552-35052a344091",
+          "sort_variation_attributes": "101",
+          "thumbnail_videos": null,
+          "updated_at": "2024-12-28T04:36:52",
+          "variation_pos_id": "f4f8c135-ed2e-4133-9a06-133c73112edf",
+          "variation_template": null,
+          "videos": null,
+          "weight": 0,
+          "wholesale_price": null,
+          "wholesale_price_by_currency": null
+        },
+        {
+          "actual_remain_quantity": 0,
+          "custom_id": "SP2M",
+          "display_id": null,
+          "fields": [
+            {
+              "name": "size",
+              "value": "m"
+            }
+          ],
+          "id": "337c2d8d-435a-45c3-9e1f-5409bf81254b",
+          "images": [],
+          "images_design": null,
+          "inserted_at": "2024-12-20T02:28:00",
+          "is_hidden": false,
+          "is_locked": false,
+          "is_pre_order": false,
+          "is_removed": false,
+          "is_wallpaper": false,
+          "last_editor_id": "aaa528db-eff4-4072-8758-ab9d98dcc1bb",
+          "original_price": 200000,
+          "original_price_by_currency": null,
+          "pending": 0,
+          "product_id": "83df7d5a-8aa8-4829-94fd-a44927a94110",
+          "product_pos_id": "8717bbe6-bcca-4b4c-beb8-bf4eca9ea0d0",
+          "remain_quantity": 7,
+          "retail_price": 100000,
+          "retail_price_by_currency": null,
+          "site_id": "f6c62de6-d5d2-4983-9552-35052a344091",
+          "sort_variation_attributes": "102",
+          "thumbnail_videos": null,
+          "updated_at": "2025-01-02T08:06:31",
+          "variation_pos_id": "9cfdf14f-ccce-4530-b92a-7f00589a71b6",
+          "variation_template": null,
+          "videos": null,
+          "weight": 0,
+          "wholesale_price": null,
+          "wholesale_price_by_currency": null
+        }
+      ],
+      "product_attributes": [
+        {
+          "name": "size",
+          "values": [
+            "s",
+            "m"
+          ]
+        }
+      ],
+      "attributes_disable": [],
+      "total_sold_web": 0,
+      "rating": 0,
+      "compress_description": null,
+      "pixel_data": {}
+    },
+    {
+      "total_sold": 0,
+      "product_attributes": [
+        {
+          "name": "size",
+          "values": [
+            "s",
+            "m"
+          ]
+        }
+      ],
+      "is_negative": true,
+      "is_published": true,
+      "description": null,
+      "inserted_at_pos": "2024-06-06T02:12:26.000000Z",
+      "allow_sitemap": false,
+      "google_merchant_updated_at": null,
+      "is_pinned": false,
+      "allow_google_merchant": false,
+      "is_design": false,
+      "ribbons": [],
+      "meta_tags": null,
+      "total_sold_at": null,
+      "total_sold_web": 0,
+      "display_id": 192,
+      "product_pos_id": "51571a5d-8671-403b-9c8b-e236949642c2",
+      "allow_facebook_catalog": false,
+      "google_merchant_product_id": null,
+      "site_id": "f6c62de6-d5d2-4983-9552-35052a344091",
+      "compress_description": null,
+      "is_runout": false,
+      "pixel_data": {},
+      "shop_id": 20003975,
+      "tags": [],
+      "image": null,
+      "custom_links": [],
+      "total_view_web": 0,
+      "lesser_compress_description": false,
+      "slug": "sp1",
+      "allow_google_catalog": false,
+      "short_description": [],
+      "last_editor_id": "aaa528db-eff4-4072-8758-ab9d98dcc1bb",
+      "attributes_disable": [],
+      "updated_at": "2024-12-28T04:36:21.860965Z",
+      "created_by": "aaa528db-eff4-4072-8758-ab9d98dcc1bb",
+      "removed": false,
+      "type_design": null,
+      "variations": [
+        {
+          "actual_remain_quantity": 0,
+          "custom_id": "SP1S",
+          "display_id": null,
+          "fields": [
+            {
+              "name": "size",
+              "value": "s"
+            },
+            {
+              "name": "color",
+              "value": "red"
+            }
+          ],
+          "id": "ff75021f-c86f-4ca2-a301-4d3869ba75a2",
+          "images": [
+            "https://content.pancake.vn/web-media/f2/51/2a/25/dab49aed7796c0fe04bcb8a54a21759aa5ad20b854582a7cff3806b0.png"
+          ],
+          "images_design": null,
+          "inserted_at": "2024-12-20T02:26:49",
+          "is_hidden": false,
+          "is_locked": false,
+          "is_pre_order": false,
+          "is_removed": false,
+          "is_wallpaper": false,
+          "last_editor_id": "aaa528db-eff4-4072-8758-ab9d98dcc1bb",
+          "original_price": 222220,
+          "original_price_by_currency": null,
+          "pending": 0,
+          "product_id": "a7ad8a26-486a-4da4-a933-1984e88fff58",
+          "product_pos_id": "51571a5d-8671-403b-9c8b-e236949642c2",
+          "remain_quantity": 9,
+          "retail_price": 100000,
+          "retail_price_by_currency": null,
+          "site_id": "f6c62de6-d5d2-4983-9552-35052a344091",
+          "sort_variation_attributes": "101",
+          "thumbnail_videos": null,
+          "updated_at": "2024-12-28T04:36:21",
+          "variation_pos_id": "ac0dc56c-7042-4208-85c0-e3feb6a4ccfb",
+          "variation_template": null,
+          "videos": null,
+          "weight": 0,
+          "wholesale_price": null,
+          "wholesale_price_by_currency": null
+        },
+        {
+          "actual_remain_quantity": 0,
+          "custom_id": "SP1M",
+          "display_id": null,
+          "fields": [
+            {
+              "name": "size",
+              "value": "m"
+            },
+            {
+              "name": "color",
+              "value": "red"
+            }
+          ],
+          "id": "659e791c-21fe-435c-9f58-016415ee03dd",
+          "images": [
+            "https://content.pancake.vn/web-media/f2/51/2a/25/dab49aed7796c0fe04bcb8a54a21759aa5ad20b854582a7cff3806b0.png"
+          ],
+          "images_design": null,
+          "inserted_at": "2024-12-20T02:26:49",
+          "is_hidden": false,
+          "is_locked": false,
+          "is_pre_order": false,
+          "is_removed": false,
+          "is_wallpaper": false,
+          "last_editor_id": "aaa528db-eff4-4072-8758-ab9d98dcc1bb",
+          "original_price": 222220,
+          "original_price_by_currency": null,
+          "pending": 0,
+          "product_id": "a7ad8a26-486a-4da4-a933-1984e88fff58",
+          "product_pos_id": "51571a5d-8671-403b-9c8b-e236949642c2",
+          "remain_quantity": -1,
+          "retail_price": 100000,
+          "retail_price_by_currency": null,
+          "site_id": "f6c62de6-d5d2-4983-9552-35052a344091",
+          "sort_variation_attributes": "102",
+          "thumbnail_videos": null,
+          "updated_at": "2024-12-28T04:36:21",
+          "variation_pos_id": "422e7f49-1384-4e7e-9c30-0453a9d50839",
+          "variation_template": null,
+          "videos": null,
+          "weight": 0,
+          "wholesale_price": null,
+          "wholesale_price_by_currency": null
+        },
+        {
+          "actual_remain_quantity": 0,
+          "custom_id": "SP1SB",
+          "display_id": null,
+          "fields": [
+            {
+              "name": "size",
+              "value": "s"
+            },
+            {
+              "name": "color",
+              "value": "blue"
+            }
+          ],
+          "id": "ff75021f-c86f-4ca2-a301-4d3869ba75b2",
+          "images": [
+            "https://content.pancake.vn/web-media/f2/51/2a/25/dab49aed7796c0fe04bcb8a54a21759aa5ad20b854582a7cff3806b0.png"
+          ],
+          "images_design": null,
+          "inserted_at": "2024-12-20T02:26:49",
+          "is_hidden": false,
+          "is_locked": false,
+          "is_pre_order": false,
+          "is_removed": false,
+          "is_wallpaper": false,
+          "last_editor_id": "aaa528db-eff4-4072-8758-ab9d98dcc1bb",
+          "original_price": 222220,
+          "original_price_by_currency": null,
+          "pending": 0,
+          "product_id": "a7ad8a26-486a-4da4-a933-1984e88fff58",
+          "product_pos_id": "51571a5d-8671-403b-9c8b-e236949642c2",
+          "remain_quantity": 9,
+          "retail_price": 100000,
+          "retail_price_by_currency": null,
+          "site_id": "f6c62de6-d5d2-4983-9552-35052a344091",
+          "sort_variation_attributes": "101",
+          "thumbnail_videos": null,
+          "updated_at": "2024-12-28T04:36:21",
+          "variation_pos_id": "ac0dc56c-7042-4208-85c0-e3feb6a4ccfb",
+          "variation_template": null,
+          "videos": null,
+          "weight": 0,
+          "wholesale_price": null,
+          "wholesale_price_by_currency": null
+        },
+        {
+          "actual_remain_quantity": 0,
+          "custom_id": "SP1MB",
+          "display_id": null,
+          "fields": [
+            {
+              "name": "size",
+              "value": "m"
+            },
+            {
+              "name": "color",
+              "value": "blue"
+            }
+          ],
+          "id": "ff75021f-c86f-4ca2-a301-4d3869ba71a2",
+          "images": [
+            "https://content.pancake.vn/web-media/f2/51/2a/25/dab49aed7796c0fe04bcb8a54a21759aa5ad20b854582a7cff3806b0.png"
+          ],
+          "images_design": null,
+          "inserted_at": "2024-12-20T02:26:49",
+          "is_hidden": false,
+          "is_locked": false,
+          "is_pre_order": false,
+          "is_removed": false,
+          "is_wallpaper": false,
+          "last_editor_id": "aaa528db-eff4-4072-8758-ab9d98dcc1bb",
+          "original_price": 222220,
+          "original_price_by_currency": null,
+          "pending": 0,
+          "product_id": "a7ad8a26-486a-4da4-a933-1984e88fff58",
+          "product_pos_id": "51571a5d-8671-403b-9c8b-e236949642c2",
+          "remain_quantity": 9,
+          "retail_price": 100000,
+          "retail_price_by_currency": null,
+          "site_id": "f6c62de6-d5d2-4983-9552-35052a344091",
+          "sort_variation_attributes": "101",
+          "thumbnail_videos": null,
+          "updated_at": "2024-12-28T04:36:21",
+          "variation_pos_id": "ac0dc56c-7042-4208-85c0-e3feb6a4ccfb",
+          "variation_template": null,
+          "videos": null,
+          "weight": 0,
+          "wholesale_price": null,
+          "wholesale_price_by_currency": null
+        },
+      ],
+      "pos_display_id": 192,
+      "name": "sp1",
+      "inserted_at": "2024-12-20T02:26:49.275251Z",
+      "is_pre_order": false,
+      "before_product_id": null,
+      "categories": [
+        {
+          "rm_if_cond_mismatch": false,
+          "is_default": false,
+          "description": null,
+          "pos_id": 34218,
+          "total_product_hidden": null,
+          "condition_type": "AND",
+          "parent_id": null,
+          "is_design": false,
+          "meta_tags": null,
+          "left": 2,
+          "display_id": 19,
+          "breakpoint_images": {},
+          "site_id": "f6c62de6-d5d2-4983-9552-35052a344091",
+          "children": [],
+          "pixel_data": {},
+          "position": 0,
+          "shop_id": 20003975,
+          "image": null,
+          "multi_description": [],
+          "parent_pos_id": null,
+          "total_product_visible": null,
+          "slug": "sp",
+          "total_product_pinned": null,
+          "last_editor_id": "aaa528db-eff4-4072-8758-ab9d98dcc1bb",
+          "updated_at": "2024-12-26T02:10:15",
+          "type_design": null,
+          "pin_product_ids": [],
+          "right": 3,
+          "is_removed": false,
+          "suffix": 0,
+          "name": "sp",
+          "inserted_at": "2024-12-26T02:10:15",
+          "product_conditions": [],
+          "depth": 0,
+          "sort_type": 3,
+          "is_hidden": false,
+          "id": "14599c5d-641e-4aac-9136-3dafd3f3d8dc",
+          "show_sitemap": false,
+          "bottom_description": null,
+          "prioritize_breadcrumb_display": false,
+          "name_render": null
+        }
+      ],
+      "custom_id": "sp1",
+      "id": "a7ad8a26-486a-4da4-a933-1984e88fff58",
+      "measure_group_id": null,
+      "brand": null,
+      "rating": 0,
+      "google_category_id": null,
+      "suppliers": [],
+      "materials": [],
+      "short_link": {
+        "element_id": "a7ad8a26-486a-4da4-a933-1984e88fff58",
+        "element_type": "PRODUCT",
+        "hash": "qYD1j",
+        "id": 566988,
+        "inserted_at": "2024-12-20T02:26:49",
+        "site_id": "f6c62de6-d5d2-4983-9552-35052a344091",
+        "updated_at": "2024-12-20T02:26:49"
+      },
+      "bonus_products": [],
+      "device_template_id": null
+    }
+  ]
+})
