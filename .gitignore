@@ -38,4 +38,4 @@ Thumbs.db
 www/
 
 #package
-package-log.json
+package-lock.json
