@@ -36,3 +36,6 @@ Thumbs.db
 
 # Production build
 www/
+
+#package
+package-log.json
