@@ -24,6 +24,7 @@
     "@phosphor-icons/react": "^2.1.7",
     "antd": "^5.23.0",
     "axios": "^1.7.9",
+    "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "html-entities": "^2.5.2",
     "prop-types": "^15.8.1",
