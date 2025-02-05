@@ -110,6 +110,10 @@ const HomePage = () => {
     navigate('/categories')
   }
 
+  const goTo = (path) => {
+    navigate(path)
+  }
+
   useEffect(() => {
     if (!localStorage.getItem("isAuth")) {
       authorizeUser()
@@ -176,7 +180,7 @@ const HomePage = () => {
                 </div>
                 <div className="text-[12px] text-center pt-1">Ưu đãi của tôi</div>
               </div>
-              <div className={`flex flex-col items-center w-[60px]`} onClick={() => handleChangeType('4')}>
+              <div className={`flex flex-col items-center w-[60px]`} onClick={() => goTo('/history-order')}>
                 <div className={`text-[#5e636a] flex items-center justify-center border border-solid border-[#cdd8df] w-[36px] h-[36px] rounded-full bg-[#e2e8ec]`}>
                   <ShoppingCart size={24} color="#212121" weight="duotone"/>
                 </div>

@@ -11,6 +11,11 @@ export const categoryChooseState = atom({
   default: null
 })
 
+export const termSearchState = atom({
+  key: "termSearchProduct",
+  default: ''
+})
+
 export const categoryStore = (type, payload = {}) => {
   const getCategories = async () => {
     return await getApi("/categories")
@@ -20,9 +25,15 @@ export const categoryStore = (type, payload = {}) => {
     return await getApi(`/categories/${id}`)
   }
 
+  const searchProducts = async (payload) => {
+    console.log(payload, "payloadddd termmm")
+    return await getApi(`/search`, { params: payload })
+  }
+
   const obj = {
     getCategories,
-    getCategoryById
+    getCategoryById,
+    searchProducts
   }
 
   return obj[type](payload)

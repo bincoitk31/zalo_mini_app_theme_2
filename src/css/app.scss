@@ -23,6 +23,16 @@
 .custom-drawer {
   border-radius: 8px;
   .ant-drawer-body {
-    padding: 0px
+    padding: 0px;
+  }
+}
+
+.custom-tabs {
+  .ant-tabs-nav {
+    background: #ffffff;
+  }
+  .ant-tabs-tab {
+    margin: 0 !important;
+    padding: 8px;
   }
 }
