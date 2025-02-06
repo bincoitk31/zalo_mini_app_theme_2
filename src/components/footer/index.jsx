@@ -1,11 +1,13 @@
-import React, { useEffect} from "react";
+import React, { useEffect, useState} from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { activeTabState } from "../../recoil/atoms";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { drawerAddCartState, typeAddCartState } from "../../recoil/product";
 import { openCartState, openAddAddressState } from "../../recoil/order";
+import { memberZaloState } from "../../recoil/member";
 import { Button } from 'antd'
 import { HouseLine, ListMagnifyingGlass, ShoppingBag, User, ChatCircleDots } from '@phosphor-icons/react'
+import { openChat, getUserID } from "zmp-sdk/apis";
 import AddToCart from "../add-to-cart";
 import Cart from "../cart";
 import AddAddress from "../add-address";
@@ -15,6 +17,10 @@ const FooterCustom = (props) => {
   const [drawerAddCart, setDrawerAddCart] = useRecoilState(drawerAddCartState)
   const [openCart, setOpenCart] = useRecoilState(openCartState)
   const [openAddAddress, setOpenAddAddress] = useRecoilState(openAddAddressState)
+  const [memberZalo ,setMemberZalo] = useRecoilState(memberZaloState)
+
+  const [userId, setUserId] = useState()
+
   const location = useLocation()
   const { title } = props;
   const navigate = useNavigate()
@@ -35,6 +41,20 @@ const FooterCustom = (props) => {
       case "member":
         navigate("/member")
         break
+    }
+  }
+
+  const openChatScreen = async () => {
+    try {
+      let oa_id = import.meta.env.VITE_ZALO_OA_ID
+      await openChat({
+        type: "oa",
+        id: oa_id,
+        message: "Xin Chào",
+      });
+    } catch (error) {
+      // xử lý khi gọi api thất bại
+      console.log(error);
     }
   }
 
@@ -61,7 +81,7 @@ const FooterCustom = (props) => {
                 <ShoppingBag size={24} color="#797979" weight="light" />
                 <div className="text-[12px] text-[#797979]">Giỏ hàng</div>
               </div>
-              <div className="flex-1 flex flex-col items-center">
+              <div onClick={() => openChatScreen()} className="flex-1 flex flex-col items-center">
                 <ChatCircleDots size={24} color="#797979" weight="light" />
                 <div className="text-[12px] text-[#797979]">Tin nhắn</div>
               </div>

@@ -166,6 +166,18 @@ const HeaderCustom = () => {
           </div>
         </div>
       }
+
+      {
+        activeTab == 'member' &&
+        <div className="fixed w-full z-[999]">
+          <div className="flex bg-[#000] p-2">
+            <div className="text-[#fff] text-[14px] flex items-center">
+              <CaretLeft onClick={goBack} size={20} color="#ffffff" weight="light" />
+              <div className="font-bold">Cá nhân</div>
+            </div>
+          </div>
+        </div>
+      }
     </>
   )
 };

@@ -6,7 +6,7 @@ import { categoryStore, categoriesState, categoryChooseState  } from "../recoil/
 import { useNavigate } from "react-router-dom";
 import { Gift, ShoppingBag, ShoppingCart, Truck, Star, CaretRight } from "@phosphor-icons/react";
 import { Input, Button } from "antd";
-import { authorize, getPhoneNumber, getAccessToken, getUserInfo } from "zmp-sdk/apis";
+import { authorize, getPhoneNumber, getAccessToken, getUserInfo, followOA, unfollowOA } from "zmp-sdk/apis";
 import { getApiAxios } from '../utils/request';
 import { memberZaloState, phoneMemberZaloState } from "../recoil/member"
 
@@ -25,6 +25,34 @@ const HomePage = () => {
 
   const [grid1, setGrid1] = useState({data: []})
   const [grid2, setGrid2] = useState({data: []})
+
+  const unfollow = async () => {
+    try {
+      let oa_id = import.meta.env.VITE_ZALO_OA_ID
+      const res = await unfollowOA({
+        id: oa_id
+      });
+      setMemberZalo({...memberZalo, followedOA: false})
+      console.log(res, "unfollow oa_id")
+    } catch (error) {
+      // xử lý khi gọi api thất bại
+      console.log(error);
+    }
+  };
+
+  const follow = async () => {
+    try {
+      let oa_id = import.meta.env.VITE_ZALO_OA_ID
+      const res = await followOA({
+        id: oa_id
+      });
+      console.log(res, "res follow OA")
+      setMemberZalo({...memberZalo, followedOA: true})
+    } catch (error) {
+      // xử lý khi gọi api thất bại
+      console.log(error);
+    }
+  };
 
   const getUser = async () => {
     try {
@@ -144,7 +172,7 @@ const HomePage = () => {
 
   return (
     <Page className="page">
-      <div className="flex h-[100px] bg-[#000] p-2">
+      <div className="flex h-[52px] bg-[#000] p-2">
         <div>
           <img src={memberZalo.avatar} className="w-[36px] h-[36px] rounded-full"/>
         </div>
@@ -153,7 +181,7 @@ const HomePage = () => {
           <div className="font-bold">{memberZalo.name}</div>
         </div>
       </div>
-      <div className="relative h-[100px] bg-[#fff]">
+      {/* <div className="relative h-[100px] bg-[#fff]">
         <div className="mx-2 bg-[#fff] rounded-lg absolute top-[-37px] w-[calc(100%-16px)] border border-solid border-[#f8f4f4]">
           <div className=" border-b border-b-solid border-b-[#f8f4f4]">
             <div className="p-2 flex justify-between">
@@ -196,7 +224,7 @@ const HomePage = () => {
             
           </div>
         </div>
-      </div>
+      </div> */}
       
 
       <div className="p-2 mb-2 bg-[#fff]">
@@ -210,7 +238,13 @@ const HomePage = () => {
               <img className="w-[30px] h-[30px] rounded-full bg-[#fff]" src="https://content.pancake.vn/1/s900x900/fwebp/ef/a5/21/80/6c8c38d77a6e2788c681255b20e0b13068010b1eba28895384246920.png" />
               <div className="font-bold pl-2"> PCSG </div>
             </div>
-            <Button color="default" variant="solid" className="font-bold text-[12px] rounded-full">Quan tâm</Button>
+            {
+              memberZalo ?.followedOA ?
+              <Button onClick={() => unfollow()} color="default" variant="solid" className="font-bold text-[12px] rounded-full">Bỏ quan tâm</Button>
+              :
+              <Button onClick={() => follow()} color="default" variant="solid" className="font-bold text-[12px] rounded-full">Quan tâm</Button>
+            }
+            
           </div>
         </div>
       </div>

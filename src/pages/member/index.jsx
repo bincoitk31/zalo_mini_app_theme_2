@@ -4,6 +4,7 @@ import Infomation from "./infomation"
 import Coupon from "./coupon"
 import HistoryOrder from "./history-order"
 import TrackingOrder from "./tracking-order"
+import FollowOA from "../../components/follow-oa"
 
 const Member = () => {
   const [type, setType] = useState('1')
@@ -22,7 +23,7 @@ const Member = () => {
             </div>
             <div className="text-[12px] text-center pt-1">Thông tin tài khoản</div>
           </div>
-          <div className={`flex flex-col items-center w-[60px] ${type == '2' ? 'text-[#006af5]' : ''}`} onClick={() => handleChangeType('2')}>
+          {/* <div className={`flex flex-col items-center w-[60px] ${type == '2' ? 'text-[#006af5]' : ''}`} onClick={() => handleChangeType('2')}>
             <div className={`${type == '2' ? 'text-[#006af5]' : 'text-[#5e636a]'} flex items-center justify-center border border-solid border-[#cdd8df] w-[36px] h-[36px] rounded-full bg-[#cdd8df] `}><GiftOutlined/></div>
             <div className="text-[12px] text-center pt-1">Coupon</div>
           </div>
@@ -33,7 +34,7 @@ const Member = () => {
           <div className={`flex flex-col items-center w-[60px] ${type == '4' ? 'text-[#006af5]' : ''}`} onClick={() => handleChangeType('4')}>
             <div className={`${type == '4' ? 'text-[#006af5]' : 'text-[#5e636a]'} flex items-center justify-center border border-solid border-[#cdd8df] w-[36px] h-[36px] rounded-full bg-[#cdd8df]`}><ShoppingCartOutlined/></div>
             <div className="text-[12px] text-center pt-1">Lịch sử đơn hàng</div>
-          </div>
+          </div> */}
         </div>
       </div>
 
@@ -43,6 +44,8 @@ const Member = () => {
         { type == '3' && <TrackingOrder />}
         { type == '4' && <HistoryOrder />}
       </div>
+      
+      <FollowOA />
 
     </div>
   )
