@@ -1,5 +1,5 @@
 const express = require('express');
-const { spawn } = require('child_process');
+const { spawn, exec } = require('child_process');
 
 require('dotenv').config();
 
@@ -26,7 +26,16 @@ app.post('/api/run_command', (req, res) => {
     res.json(output)
   }).catch((err) => {
     console.error("\n❌ Deployment Failed:\n", err);
+  }).finally(() => {
+    exec("pm2 restart zalo", (error, stdout, stderr) => {
+      if (error) {
+          console.error(`❌ Lỗi khi restart server: ${error.message}`);
+          return;
+      }
+      console.log(stdout);
   });
+  })
+  
 });
 
 async function runDeployment(command, description, app_id, access_token) {
@@ -42,6 +51,9 @@ async function runDeployment(command, description, app_id, access_token) {
       // Xử lý dữ liệu đầu ra từ quá trình
       loginProcess.stdout.on("data", (data) => {
         const text = data.toString();
+        // Lưu trữ output từ terminal
+        console.log("textttt",text)
+        
         // Nhập mini app id nếu yêu cầu
         if (loginProcess.stdin.writable) {
           if (text.includes("Mini App ID") && !isAppIdEntered) {
@@ -85,7 +97,7 @@ async function runDeployment(command, description, app_id, access_token) {
               const text = data.toString();
               // output += text;
               if (text.includes("Version:")) output += text
-              console.log(output, "OUTPUTT")
+
               // Nếu xuất hiện menu chọn phiên bản, tự động chọn "Development"
               if (text.includes("What version status are you deploying?") && !isVersionChoiseEntered) {
                 if (versionChoice === "Development") {
