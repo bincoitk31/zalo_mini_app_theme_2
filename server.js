@@ -1,7 +1,7 @@
 const express = require('express');
 const { spawn, exec } = require('child_process');
 const fs = require('fs');
-
+const path = require("path");
 require('dotenv').config();
 
 const app = express();
@@ -17,9 +17,11 @@ app.post('/api/run_command', (req, res) => {
   }
 
   console.log(req.body, "BODYYYYYY")
-
+  // Chuyển đến thư mục zalo_mini_app trước khi chạy lệnh
+  process.chdir(path.join(__dirname, "zalo_mini_app"));
+  console.log(path, "Pathhhhh")
   process.env.VITE_SITE_ID = site_id
-  process.env.APP_ID = app_id
+  //process.env.APP_ID = app_id
   process.env.VITE_ZALO_SECRET_KEY = zalo_secret_key
   process.env.VITE_ZALO_OA_ID = zalo_oa_id
 
