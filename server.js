@@ -55,7 +55,7 @@ function removeEnvVariableAndRestart() {
 
   // Restart server
   console.log("♻️ Đang khởi động lại ứng dụng...");
-  exec("pm2 stop zalo && pm2 restart zalo", (error, stdout, stderr) => {
+  exec("pm2 restart zalo --update-env", (error, stdout, stderr) => {
     if (error) {
         console.error(`❌ Lỗi khi stop & restart: ${error.message}`);
         return;
@@ -71,7 +71,7 @@ async function runDeployment(command, description, app_id, access_token) {
       console.log("🚀 Starting deployment...");
 
       // Chạy lệnh `zmp login`
-      const loginProcess = spawn("zmp", ["login"], { stdio: ["pipe", "pipe", "inherit"]});
+      const loginProcess = spawn("zmp", ["login"],  {stdio: ["pipe", "pipe", "inherit"]});
       let isAppIdEntered = false;
       let isLoginMethodSelected = false;
       let isAccessTokenEntered = false;
