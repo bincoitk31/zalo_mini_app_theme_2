@@ -1,7 +1,6 @@
 const express = require('express');
 const { spawn, exec } = require('child_process');
 const fs = require('fs');
-const path = require("path");
 require('dotenv').config();
 
 const app = express();
@@ -17,20 +16,19 @@ app.post('/api/run_command', (req, res) => {
   }
 
   console.log(req.body, "BODYYYYYY")
-  // Chuyển đến thư mục zalo_mini_app trước khi chạy lệnh
-  process.chdir(path.join(__dirname, "zalo_mini_app"));
-  console.log(path, "Pathhhhh")
+  
   process.env.VITE_SITE_ID = site_id
   //process.env.APP_ID = app_id
   process.env.VITE_ZALO_SECRET_KEY = zalo_secret_key
   process.env.VITE_ZALO_OA_ID = zalo_oa_id
 
   runDeployment(command, description, app_id, access_token).then((output) => {
+    console.log("outputtt", output)
     res.json(output)
   }).catch((err) => {
     console.error("\n❌ Deployment Failed:\n", err);
   }).finally(() => {
-    removeEnvVariableAndRestart()
+    //removeEnvVariableAndRestart()
   })
   
 });
@@ -125,6 +123,7 @@ async function runDeployment(command, description, app_id, access_token) {
           // Xử lý dữ liệu đầu ra từ quá trình
           deployProcess.stdout.on("data", (data) => {
               const text = data.toString();
+              console.log(text, "texx")
               // output += text;
               if (text.includes("Version:")) output += text
 
@@ -147,6 +146,7 @@ async function runDeployment(command, description, app_id, access_token) {
 
           deployProcess.stderr.on("data", (data) => {
               const text = data.toString();
+              console.log(text, "texx")
               if (text.includes("Version:")) output += text
           });
 
