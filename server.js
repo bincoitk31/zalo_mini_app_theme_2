@@ -55,20 +55,12 @@ function removeEnvVariableAndRestart() {
 
   // Restart server
   console.log("♻️ Đang khởi động lại ứng dụng...");
-  exec("pm2 stop zalo", (error, stdout, stderr) => {
+  exec("pm2 stop zalo && pm2 restart zalo", (error, stdout, stderr) => {
     if (error) {
-        console.error(`❌ Lỗi khi stop: ${error.message}`);
+        console.error(`❌ Lỗi khi stop & restart: ${error.message}`);
         return;
     }
-
-    console.log(stdout);
-    exec("pm2 restart zalo", (error, stdout, stderr) => {
-      if (error) {
-          console.error(`❌ Lỗi khi restart: ${error.message}`);
-          return;
-      }
-      console.log(stdout);
-  });
+    console.log(stdout)
   });
 
   
