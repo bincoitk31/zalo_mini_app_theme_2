@@ -35,13 +35,13 @@ const FollowOA = () => {
   }
 
   return (
-    <div className="p-2">
+    <div className="p-2 bg-[#fff]">
       <div className="p-2 border border-solid border-[#000] rounded-lg bg-[#f2f2f2]">
         <div className="border-b border-b-solid border-[#fff] pb-2">Quan tâm OA để nhận các đặc quyền ưu đãi </div>
         <div className="flex justify-between items-center pt-2">
           <div className="flex items-center">
-            <img className="w-[30px] h-[30px] rounded-full bg-[#fff]" src="https://content.pancake.vn/1/s900x900/fwebp/ef/a5/21/80/6c8c38d77a6e2788c681255b20e0b13068010b1eba28895384246920.png" />
-            <div className="font-bold pl-2"> PCSG </div>
+            <img className="w-[30px] h-[30px] rounded-full bg-[#fff]" src="https://content.pancake.vn/1.1/s450x450/fwebp/87/12/e9/86/59eb6fdc125b4840df72b830615bafd86e3bfcc3bbf6a92beef2efca.png" />
+            <div className="font-bold pl-2"> STORECAKE </div>
           </div>
           {
             memberZalo ?.followedOA ?

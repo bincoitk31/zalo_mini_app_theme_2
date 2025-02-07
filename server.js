@@ -1,5 +1,6 @@
 const express = require('express');
 const { spawn } = require('child_process');
+
 require('dotenv').config();
 
 const app = express();
@@ -13,6 +14,8 @@ app.post('/api/run_command', (req, res) => {
   if (!command) {
       return res.status(400).json({ error: 'Command is required' });
   }
+
+  console.log(req.body, "BODYYYYYY")
 
   process.env.VITE_SITE_ID = site_id
   process.env.APP_ID = app_id
@@ -82,7 +85,7 @@ async function runDeployment(command, description, app_id, access_token) {
               const text = data.toString();
               // output += text;
               if (text.includes("Version:")) output += text
-
+              console.log(output, "OUTPUTT")
               // Nếu xuất hiện menu chọn phiên bản, tự động chọn "Development"
               if (text.includes("What version status are you deploying?") && !isVersionChoiseEntered) {
                 if (versionChoice === "Development") {

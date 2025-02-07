@@ -15,6 +15,7 @@ import Member from '../pages/member';
 import Search from '../pages/search';
 import Address from '../pages/address';
 import HistoryOrder from '../pages/history-orders';
+import Contact from '../pages/contact';
 
 const MyApp = () => {
   localStorage.removeItem('isAuth')
@@ -54,6 +55,7 @@ const MyApp = () => {
             <Route path="/search" element={<Search />}></Route>
             <Route path="/address" element={<Address />}></Route>
             <Route path="/history-order" element={<HistoryOrder />}></Route>
+            <Route path="/contact" element={<Contact />}></Route>
           </AnimationRoutes>
           <FooterCustom />
         </ZMPRouter>

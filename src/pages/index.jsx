@@ -14,6 +14,7 @@ import Carousel from "../components/carousel";
 import ProductGrid from "../components/product-grid";
 import ListCategory from "../components/list-categoy";
 import ProductList from "../components/product-list";
+import FollowOA from "../components/follow-oa";
 
 const HomePage = () => {
   const navigate = useNavigate()
@@ -230,24 +231,9 @@ const HomePage = () => {
       <div className="p-2 mb-2 bg-[#fff]">
         <Carousel images={carousel}/>
       </div>
-      <div className="p-2">
-        <div className="p-2 border border-solid border-[#000] rounded-lg bg-[#f2f2f2]">
-          <div className="border-b border-b-solid border-[#fff] pb-2">Quan tâm OA để nhận các đặc quyền ưu đãi </div>
-          <div className="flex justify-between items-center pt-2">
-            <div className="flex items-center">
-              <img className="w-[30px] h-[30px] rounded-full bg-[#fff]" src="https://content.pancake.vn/1/s900x900/fwebp/ef/a5/21/80/6c8c38d77a6e2788c681255b20e0b13068010b1eba28895384246920.png" />
-              <div className="font-bold pl-2"> PCSG </div>
-            </div>
-            {
-              memberZalo ?.followedOA ?
-              <Button onClick={() => unfollow()} color="default" variant="solid" className="font-bold text-[12px] rounded-full">Bỏ quan tâm</Button>
-              :
-              <Button onClick={() => follow()} color="default" variant="solid" className="font-bold text-[12px] rounded-full">Quan tâm</Button>
-            }
-            
-          </div>
-        </div>
-      </div>
+
+      <FollowOA />
+
       <Suspense>
         <div className="section-container">
           <ListCategory />

@@ -65,7 +65,7 @@ const FooterCustom = (props) => {
   return (
     <>
       {
-        (location.pathname == "/" || location.pathname == "/member") &&
+        (location.pathname == "/" || ["/member", "/contact", "/history-order"].includes(location.pathname) ) &&
         <div>
           <div className="bg-[#fff] border-t border-t-solid border-t-[#fafafa] fixed bottom-0 w-full">
             <div className="flex py-2 items-center">
@@ -83,7 +83,7 @@ const FooterCustom = (props) => {
               </div>
               <div onClick={() => openChatScreen()} className="flex-1 flex flex-col items-center">
                 <ChatCircleDots size={24} color="#797979" weight="light" />
-                <div className="text-[12px] text-[#797979]">Tin nhắn</div>
+                <div className="text-[12px] text-[#797979]">Zalo chat</div>
               </div>
               <div onClick={() => goTo("member")} className="flex-1 flex flex-col items-center">
                 <User size={24} color={location.pathname == '/member' ? '#292929' : '#797979'} weight="light" />

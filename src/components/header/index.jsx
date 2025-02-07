@@ -48,6 +48,7 @@ const HeaderCustom = () => {
     if (location.pathname == "/address") return setActiveTab('address')
     if (location.pathname == "/search") return setActiveTab('search')
     if (location.pathname == "/history-order") return setActiveTab('history-order')
+    if (location.pathname == "/contact") return setActiveTab('contact')
   }, [location])
 
   useEffect(() => {
@@ -174,6 +175,18 @@ const HeaderCustom = () => {
             <div className="text-[#fff] text-[14px] flex items-center">
               <CaretLeft onClick={goBack} size={20} color="#ffffff" weight="light" />
               <div className="font-bold">Cá nhân</div>
+            </div>
+          </div>
+        </div>
+      }
+
+      {
+        activeTab == 'contact' &&
+        <div className="fixed w-full z-[999]">
+          <div className="flex bg-[#000] p-2">
+            <div className="text-[#fff] text-[14px] flex items-center">
+              <CaretLeft onClick={goBack} size={20} color="#ffffff" weight="light" />
+              <div className="font-bold">Liên hệ và góp ý</div>
             </div>
           </div>
         </div>
