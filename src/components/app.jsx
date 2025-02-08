@@ -19,12 +19,11 @@ import Contact from '../pages/contact';
 
 const MyApp = () => {
   localStorage.removeItem('isAuth')
+  console.log(import.meta, "metaa")
   useEffect(() => {
-    const API_URL = import.meta.env.VITE_API_URL
-    let api_url = API_URL.replace('/mini_app_api', '')
-
+    const API_URL = 'https://api.staging.storecake.io/'
     const script = document.createElement("script");
-    script.src = `${api_url}/address-zalo-mini-app/84.min.js?v=${Date.now()}`;
+    script.src = `${API_URL}/address-zalo-mini-app/84.min.js?v=${Date.now()}`;
     script.async = true; // Đảm bảo script được tải không chặn DOM
     script.id= "84"
     

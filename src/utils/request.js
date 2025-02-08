@@ -1,14 +1,12 @@
 import axios from "axios";
 
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = "https://api.staging.storecake.io/mini_app_api";
 const SITE_ID = import.meta.env.VITE_SITE_ID;
-const STORE_SECRET_KEY = import.meta.env.VITE_STORE_SECRET_KEY;
 
 const apiClient = axios.create({
   baseURL: API_URL, // Replace with your base URL
   timeout: 10000, // Request timeout in milliseconds,
   params: {
-    secret_key: STORE_SECRET_KEY,
     site_id: SITE_ID
   }
 });

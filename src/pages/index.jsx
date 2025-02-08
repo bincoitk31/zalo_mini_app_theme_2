@@ -11,7 +11,6 @@ import { getApiAxios } from '../utils/request';
 import { memberZaloState, phoneMemberZaloState } from "../recoil/member"
 
 import Carousel from "../components/carousel";
-import ProductGrid from "../components/product-grid";
 import ListCategory from "../components/list-categoy";
 import ProductList from "../components/product-list";
 import FollowOA from "../components/follow-oa";
@@ -26,34 +25,6 @@ const HomePage = () => {
 
   const [grid1, setGrid1] = useState({data: []})
   const [grid2, setGrid2] = useState({data: []})
-
-  const unfollow = async () => {
-    try {
-      let oa_id = import.meta.env.VITE_ZALO_OA_ID
-      const res = await unfollowOA({
-        id: oa_id
-      });
-      setMemberZalo({...memberZalo, followedOA: false})
-      console.log(res, "unfollow oa_id")
-    } catch (error) {
-      // xử lý khi gọi api thất bại
-      console.log(error);
-    }
-  };
-
-  const follow = async () => {
-    try {
-      let oa_id = import.meta.env.VITE_ZALO_OA_ID
-      const res = await followOA({
-        id: oa_id
-      });
-      console.log(res, "res follow OA")
-      setMemberZalo({...memberZalo, followedOA: true})
-    } catch (error) {
-      // xử lý khi gọi api thất bại
-      console.log(error);
-    }
-  };
 
   const getUser = async () => {
     try {
@@ -164,7 +135,7 @@ const HomePage = () => {
       .then(res => {
         if (res.status == 200) setGrid1(res.data.products)
       })
-    
+
     categoryStore('getCategoryById', {id: categories[2] ?.id})
       .then(res => {
         if (res.status == 200) setGrid2(res.data.products)

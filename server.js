@@ -18,7 +18,6 @@ app.post('/api/run_command', (req, res) => {
   console.log(req.body, "BODYYYYYY")
   
   process.env.VITE_SITE_ID = site_id
-  //process.env.APP_ID = app_id
   process.env.VITE_ZALO_SECRET_KEY = zalo_secret_key
   process.env.VITE_ZALO_OA_ID = zalo_oa_id
 
@@ -28,43 +27,20 @@ app.post('/api/run_command', (req, res) => {
   }).catch((err) => {
     console.error("\n❌ Deployment Failed:\n", err);
   }).finally(() => {
-    //removeEnvVariableAndRestart()
-  })
-  
-});
-
-function removeEnvVariableAndRestart() {
-  const envPath = '.env';
-
-  if (!fs.existsSync(envPath)) {
-      console.log("⚠️ File .env không tồn tại!");
-      return;
-  }
-
-  // Đọc nội dung file .env và lọc bỏ dòng chứa APP_ID
-  const envLines = fs.readFileSync(envPath, 'utf-8')
-      .split('\n')
-      .filter(line => !line.startsWith('APP_ID=')); // Xóa dòng APP_ID
-
-  // Ghi lại file .env mà không có APP_ID
-  fs.writeFileSync(envPath, envLines.join('\n'), 'utf-8');
-  console.log("✅ Đã xóa APP_ID khỏi file .env!");
-
-  // Xóa APP_ID khỏi process.env (nếu đang chạy)
-  delete process.env.APP_ID;
-
-  // Restart server
-  console.log("♻️ Đang khởi động lại ứng dụng...");
-  exec("pm2 restart zalo --update-env", (error, stdout, stderr) => {
-    if (error) {
-        console.error(`❌ Lỗi khi stop & restart: ${error.message}`);
+    exec("rm -rf .env", (error, stdout, stderr) => {
+      if (error) {
+        console.error(`❌ Lỗi khi xóa .env: ${error.message}`);
         return;
-    }
-    console.log(stdout)
-  });
+      }
+      delete process.env.APP_ID
+      delete process.env.VITE_SITE_ID
+      delete process.env.VITE_ZALO_SECRET_KEY
+      delete process.env.VITE_ZALO_OA_ID
+      console.log(stdout)
+    })
+  })
 
-  
-}
+});
 
 async function runDeployment(command, description, app_id, access_token) {
   return new Promise((resolve, reject) => {
