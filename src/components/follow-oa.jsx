@@ -1,7 +1,8 @@
 import { Button } from "antd"
 import { useRecoilState } from "recoil"
-import { followOA, unfollowOA } from "zmp-sdk/apis"
+import { followOA, unfollowOA, interactOA } from "zmp-sdk/apis"
 import { memberZaloState } from "../recoil/member"
+import { useEffect } from "react"
 
 const FollowOA = () => {
   const [memberZalo ,setMemberZalo] = useRecoilState(memberZaloState)

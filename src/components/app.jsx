@@ -21,7 +21,7 @@ const MyApp = () => {
   localStorage.removeItem('isAuth')
   console.log(import.meta, "metaa")
   useEffect(() => {
-    const API_URL = 'https://api.staging.storecake.io/'
+    const API_URL = import.meta.env.VITE_ENV == 'DEV' ? 'http://localhost:24679/' : 'https://api.staging.storecake.io/'
     const script = document.createElement("script");
     script.src = `${API_URL}/address-zalo-mini-app/84.min.js?v=${Date.now()}`;
     script.async = true; // Đảm bảo script được tải không chặn DOM

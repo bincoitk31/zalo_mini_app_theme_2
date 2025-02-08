@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "https://api.staging.storecake.io/mini_app_api";
+const API_URL = import.meta.env.VITE_ENV == 'DEV' ? 'http://localhost:24679/mini_app_api': "https://api.staging.storecake.io/mini_app_api";
 const SITE_ID = import.meta.env.VITE_SITE_ID;
 
 const apiClient = axios.create({
