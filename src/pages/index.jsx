@@ -115,9 +115,9 @@ const HomePage = () => {
   }
 
   useEffect(() => {
-    if (!localStorage.getItem("isAuth")) {
-      authorizeUser()
-    }
+    // if (!localStorage.getItem("isAuth")) {
+    //   authorizeUser()
+    // }
   }, [])
 
   useEffect(() => {
