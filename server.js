@@ -20,6 +20,7 @@ app.post('/api/run_command', (req, res) => {
   process.env.VITE_SITE_ID = site_id
   process.env.VITE_ZALO_SECRET_KEY = zalo_secret_key
   process.env.VITE_ZALO_OA_ID = zalo_oa_id
+  process.env.VITE_APP_ID = app_id
 
   runDeployment(command, description, app_id, access_token).then((output) => {
     console.log("outputtt", output)

@@ -10,9 +10,12 @@ import { activeTabState } from "../../recoil/atoms"
 import { memberZaloState, phoneMemberZaloState } from "../../recoil/member"
 import { AirplaneTilt, Package, User, MapPinLine, Plus } from '@phosphor-icons/react'
 import { listAddressState, openAddAddressState } from "../../recoil/order"
+import { Payment, events, EventName } from "zmp-sdk/apis"
+
 import CartItems from "../../components/cart-items"
 import Bill from "../../components/bill"
-
+import PaymentMethod from "../../components/payment-method"
+import CryptoJS from "crypto-js";
 
 const Checkout = () => {
   const setActiveTab = useSetRecoilState(activeTabState)
@@ -22,6 +25,7 @@ const Checkout = () => {
   const amountPrice = useRecoilValue(amountPriceState)
   const setOpenAddAddress = useSetRecoilState(openAddAddressState)
   
+  console.log(import.meta.env.VITE_APP_ID, "app_iddd")
 
   const navigate = useNavigate()
   const country_id = 84
@@ -111,6 +115,16 @@ const Checkout = () => {
     return orders
   }
 
+  const setItemsZalo = () => {
+    const items = cartItems.map(item => {
+      return {
+        id: item.id,
+        amount: item.retail_price
+      }
+    })
+    return items
+  }
+
   const checkValidForm = () => {
     if (!customerInfo ?.full_name) return message.error("Tên không được để trống!")
     if (!customerInfo ?.phone_number) return message.error("Số điện thoại không được để trống!")
@@ -121,30 +135,100 @@ const Checkout = () => {
 
   const handleOrder = async () => {
     checkValidForm()
+    createOrderZalo()
+  }
 
+  const createOrder = async (zalo_order_id) => {
+    console.log(customerInfo, "cusstomerinfoooo")
     let data = {
       order_items: setOrderItems(),
-      shipping_address: {...customerInfo, note: note}
+      shipping_address: {...customerInfo, note: note},
+      zalo_order_id: zalo_order_id,
+      location: `https://zalo.me/s/${import.meta.env.VITE_APP_ID}/`
     }
 
-    setLoadingOrder(true)
+
     const res = await postApi("/orders/quick_order", data)
     console.log(res, "res orderrrr")
     if (res.status == 200) {
       setCustomerInfo(customerInfo)
-
-      message.success("Đặt hàng thành công")
-      afterSubmitSuccess()
-      navigate("/")
     } else {
       message.error("Lỗi đặt hàng")
     }
-    setLoadingOrder(false)
   }
+
+  const createOrderZalo = () => {
+    setLoadingOrder(true)
+
+    const params = {
+      amount: totalPrice,
+      desc: `Thanh toán ${totalPrice}`,
+      item: setItemsZalo(),
+      // extradata:{
+      //   myTransactionId: id
+      // },
+      method: {
+        id: "COD_SANDBOX",
+        isCustom: false,
+      }
+    }
+  
+    const privateKey = "760ad2d8a2bb80459f309224a5e9f898"
+
+    const dataMac = Object.keys(params)
+      .sort() // sắp xếp key của Object data theo thứ tự từ điển tăng dần
+      .map(
+        (key) =>
+          `${key}=${
+            typeof params[key] === "object"
+              ? JSON.stringify(params[key])
+              : params[key]
+          }`,
+      ) // trả về mảng dữ liệu dạng [{key=value}, ...]
+      .join("&"); // chuyển về dạng string kèm theo "&", ví dụ: amount={amount}&desc={desc}&extradata={extradata}&item={item}&method={method}
+  
+      // Tạo overall mac từ dữ liệu
+      console.log(dataMac, "dataMaccc")
+      let mac = CryptoJS.HmacSHA256(dataMac, privateKey).toString()
+      console.log(mac, "macc")
+      
+      Payment.createOrder({
+        desc: `Thanh toán ${totalPrice}`,
+        item: setItemsZalo(),
+        amount: totalPrice,
+        // extradata: JSON.stringify({
+        //   myTransactionId: id // transaction id riêng của hệ thống của bạn
+        // }),
+        method: JSON.stringify({
+          id: "COD_SANDBOX", // Phương thức thanh toán
+          isCustom: false, // false: Phương thức thanh toán của Platform, true: Phương thức thanh toán riêng của đối tác
+        }),
+        mac: mac,
+        success: (data) => {
+          console.log(data, "dtaaaaa")
+          // Tạo đơn hàng thành công
+          // Hệ thống tự động chuyển sang trang thanh toán.
+          const { orderId } = data;
+          console.log(orderId);
+          createOrder(orderId)
+         
+        },
+        fail: (err) => {
+          // Tạo đơn hàng lỗi
+          setLoadingOrder(false)
+          console.log(err);
+         
+        },
+      });
+      
+    }
 
   const afterSubmitSuccess = () => {
     setCartItems([])
     localStorage.removeItem('cartItems')
+    navigate("/")
+    setLoadingOrder(false)
+    message.success("Đặt hàng thành công")
   }
 
   const handleChangeProvince = (value, option) => {
@@ -215,9 +299,60 @@ const Checkout = () => {
     if (list_address.length == 0) return setCustomerInfo(null)
     }, [listAddress])
 
-  // useEffect(() => {
-  //   setActiveTab('checkout')
-  // }, [])
+  useEffect(() => {
+    events.on(EventName.OpenApp, (data) => {
+      const path = data?.path;
+      // kiểm tra path trả về từ giao dịch thanh toán
+      // RedirectPath: đã cung cấp tại trang khai báo phương thức
+      
+      console.log(data, "OpenAppppp")
+      if (path.includes(RedirectPath)) {
+        // Nếu đúng với RedirectPath đã cũng cấp, thực hiện redirect tới path được nhận
+        // Kiểm tra giao dịch bằng API checkTransaction nếu muốn
+        Payment.checkTransaction({
+          data: path,
+          success: (rs) => {
+            // Kết quả giao dịch khi gọi api thành công
+            const { orderId, resultCode, msg, transTime, createdAt } = rs;
+            console.log(rs, "rssssss")
+            //createOrder(orderId)
+          },
+          fail: (err) => {
+            // Kết quả giao dịch khi gọi api thất bại
+            console.log(err);
+          },
+        });
+      }
+    });
+
+    events.on(EventName.PaymentClose, (data) => {
+      afterSubmitSuccess()
+      const resultCode = data?.resultCode;
+      console.log(data, "Close App")
+      // kiểm tra resultCode trả về từ sự kiện PaymentClose
+      // 0: Đang xử lý
+      // 1: Thành công
+      // -1: Thất bại
+    
+      //Nếu trạng thái đang thực hiện, kiểm tra giao dịch bằng API checkTransaction nếu muốn
+      if (resultCode === 0) {
+        Payment.checkTransaction({
+          data: { zmpOrderId: data?.zmpOrderId },
+          success: (rs) => {
+            // Kết quả giao dịch khi gọi api thành công
+            const { orderId, resultCode, msg, transTime, createdAt } = rs;
+          },
+          fail: (err) => {
+            // Kết quả giao dịch khi gọi api thất bại
+            console.log(err);
+          },
+        });
+      } else {
+        // Xử lý kết quả thanh toán thành công hoặc thất bại
+        const { orderId, resultCode, msg, transTime, createdAt } = data;
+      }
+    });
+  }, [])
 
   return (
     <>
@@ -379,12 +514,14 @@ const Checkout = () => {
         <div className="font-bold">Sản phẩm đã chọn ({cartItems.length || 0})</div>
         <CartItems />
       </div>
-      <div className="p-3 border-b-[8px] border-b-solid border-b-[#efefef]">
+      <div className="p-3 border-b border-b-solid border-b-[#dcdcdc]">
         <div className="flex justify-between items-center">
           <div className="font-bold">Ghi chú</div>
           <div>...</div>
         </div>
       </div>
+      <PaymentMethod />
+
 
       <div>
         <Bill />

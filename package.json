@@ -24,6 +24,7 @@
     "@phosphor-icons/react": "^2.1.7",
     "antd": "^5.23.0",
     "axios": "^1.7.9",
+    "crypto-js": "^4.2.0",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "html-entities": "^2.5.2",
@@ -34,7 +35,7 @@
     "react-slick": "^0.30.3",
     "recoil": "^0.7.7",
     "slick-carousel": "^1.8.1",
-    "zmp-sdk": "^2.44.1",
+    "zmp-sdk": "^2.44.2",
     "zmp-ui": "latest"
   },
   "devDependencies": {

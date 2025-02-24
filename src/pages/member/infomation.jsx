@@ -25,7 +25,6 @@ const Infomation = () => {
   const getTokenUser = async () => {
     try {
       let token = await getAccessToken({});
-      console.log(token, "rrrrrrrr")
       return token
     } catch (error) {
       // xử lý khi gọi api thất bại

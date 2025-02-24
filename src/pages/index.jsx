@@ -123,6 +123,7 @@ const HomePage = () => {
   useEffect(() => {
     categoryStore('getCategories')
     .then(res => {
+      console.log(res, "get Categoriesssss")
       if (res.status == 200) {
         setCategories(res.data.categories)
       }

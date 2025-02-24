@@ -48,7 +48,7 @@ const Cart = () => {
         </div>
         <div className="p-3">
           <div className="flex justify-between">
-            <div className="font-bold text-[14px]">Chi tiết đơn hàng ({cartItems.length || 0})</div>
+            <div className="font-bold text-[14px]">Chi tiết đơn hàng ({(cartItems || []).length || 0})</div>
             <div className="text-red-600" onClick={removeCart}>Xóa hết</div>
           </div>
           <div>
