@@ -173,7 +173,7 @@ const Checkout = () => {
       }
     }
   
-    const privateKey = "760ad2d8a2bb80459f309224a5e9f898"
+    const privateKey = import.meta.env.VITE_ZALO_PRIVATE_KEY
 
     const dataMac = Object.keys(params)
       .sort() // sắp xếp key của Object data theo thứ tự từ điển tăng dần

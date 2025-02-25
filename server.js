@@ -9,7 +9,7 @@ const port = 3000;
 app.use(express.json()); // To parse JSON request bodies
 
 app.post('/api/run_command', (req, res) => {
-  const { command, description, app_id, access_token, site_id, zalo_secret_key, zalo_oa_id } = req.body;
+  const { command, description, app_id, access_token, site_id, zalo_secret_key, zalo_oa_id, zalo_private_key } = req.body;
 
   if (!command) {
       return res.status(400).json({ error: 'Command is required' });
@@ -21,6 +21,7 @@ app.post('/api/run_command', (req, res) => {
   process.env.VITE_ZALO_SECRET_KEY = zalo_secret_key
   process.env.VITE_ZALO_OA_ID = zalo_oa_id
   process.env.VITE_APP_ID = app_id
+  process.env.VITE_ZALO_PRIVATE_KEY = zalo_private_key
 
   runDeployment(command, description, app_id, access_token).then((output) => {
     console.log("outputtt", output)
@@ -37,6 +38,7 @@ app.post('/api/run_command', (req, res) => {
       delete process.env.VITE_SITE_ID
       delete process.env.VITE_ZALO_SECRET_KEY
       delete process.env.VITE_ZALO_OA_ID
+      delete process.env.VITE_ZALO_PRIVATE_KEY
       console.log(stdout)
     })
   })
