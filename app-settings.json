@@ -1,0 +1,41 @@
+{
+  "categories_home": [
+    {
+      "id": "45bc54d1-ba81-433d-8a3a-58afce71658a",
+      "name": "danh muc 1"
+    },
+    {
+      "id": "71256ef3-e977-4f97-8337-50a3da64f720",
+      "name": "Sách Toán Grade 1"
+    },
+    {
+      "id": "a9dedc26-7a82-436b-ba14-6518f30ae6de",
+      "name": "180 Days Grade 6"
+    }
+  ],
+  "sliders": [
+    {
+      "type": "image",
+      "url": "https://content.pancake.vn/web_content/30/39/9c/3f/03edb6eb731c492a093fab58ef8af17146bc759a99309549cb7885e8-w:450-h:441-l:409816-t:image/png.png"
+    },
+    {
+      "type": "image",
+      "url": "https://content.pancake.vn/web_content/1c/a8/29/7b/148f81fb0e89c403f8162ee0f06ac663296d8d6a695c51a19546878d-w:904-h:386-l:272743-t:image/png.png"
+    },
+    {
+      "type": "image",
+      "url": "https://content.pancake.vn/web_content/eb/78/8a/46/5165dc2695488345b51b649e9f665745c490120f9ddb0dbf2f4bf00c-w:1568-h:599-l:550161-t:image/png.png"
+    },
+    {
+      "type": "image",
+      "url": "https://content.pancake.vn/web_content/df/c5/84/3f/28e45223b5cc97fd7b84a4ab70c7345e2635f029fc5182d5e8620a65-w:1920-h:2560-l:700726-t:image/jpeg.jpeg"
+    },
+    {
+      "type": "image",
+      "url": "https://content.pancake.vn/web_content/4f/bb/0f/90/adc100f0f0c418a26df62a814be54e8b226ef642460908c27887e11a-w:309-h:295-l:27367-t:image/png.png"
+    }
+  ],
+  "zalo_oa_id": "3510249125083374313",
+  "zalo_oa_name": "PANCAKE",
+  "zalo_oa_logo": "https://content.pancake.vn/web_content/4f/bb/0f/90/adc100f0f0c418a26df62a814be54e8b226ef642460908c27887e11a-w:309-h:295-l:27367-t:image/png.png"
+}

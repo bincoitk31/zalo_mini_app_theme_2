@@ -15,16 +15,18 @@ import ListCategory from "../components/list-categoy";
 import ProductList from "../components/product-list";
 import FollowOA from "../components/follow-oa";
 
+import settings from "../../app-settings.json"
+
 const HomePage = () => {
+  const CATEGORIES_HOME = settings ?.categories_home || []
+
   const navigate = useNavigate()
   const carousel = useRecoilValue(carouselState)
   const [categories, setCategories] = useRecoilState(categoriesState)
   const [memberZalo ,setMemberZalo] = useRecoilState(memberZaloState)
   const [categoryChoose, setCategoryChoose] = useRecoilState(categoryChooseState)
   const setPhoneMemberZalo = useSetRecoilState(phoneMemberZaloState)
-
-  const [grid1, setGrid1] = useState({data: []})
-  const [grid2, setGrid2] = useState({data: []})
+  const [categoriesHome, setCategoriesHome] = useState([])
 
   const getUser = async () => {
     try {
@@ -105,6 +107,19 @@ const HomePage = () => {
     }
   };
 
+  const renderProductsCategories = (category) => {
+    console.log(category, "categoryyy")
+    return (
+      <div className="mt-4" key={category.id}>
+        <div className="flex justify-between font-bold pb-2">
+          <span className="text-[14px]">{category.name}</span>
+          <span onClick={() => goToCategory(category.id)}>Tất cả</span>
+        </div>
+        <ProductList products={category.products} />
+      </div>
+    )
+  }
+
   const goToCategory = (id) => {
     setCategoryChoose(id)
     navigate('/categories')
@@ -131,17 +146,32 @@ const HomePage = () => {
   }, [])
 
   useEffect(() => {
-    if (categories.length < 3) return
-    categoryStore('getCategoryById', {id: categories[1] ?.id})
-      .then(res => {
-        if (res.status == 200) setGrid1(res.data.products)
-      })
+    const fetchCategories = async () => {
+      const updatedCategories = []
 
-    categoryStore('getCategoryById', {id: categories[2] ?.id})
-      .then(res => {
-        if (res.status == 200) setGrid2(res.data.products)
-      })
-  }, [categories])
+      for (const category of CATEGORIES_HOME) {
+        try {
+          const res = await categoryStore("getCategoryById", { id: category.id });
+
+          if (res.status === 200) {
+            if (res.data.products && res.data.products.data.length > 0) {
+              updatedCategories.push({
+                ...category,
+                products: res.data.products,
+              });
+            }
+
+          }
+        } catch (error) {
+          console.error("Error fetching category:", error);
+        }
+      }
+      setCategoriesHome(updatedCategories)
+    }
+
+    fetchCategories()
+
+  }, [])
 
   return (
     <Page className="page">
@@ -209,29 +239,7 @@ const HomePage = () => {
       <Suspense>
         <div className="section-container">
           <ListCategory />
-          {grid1 ?.data.length > 0 &&
-            (
-              <div className="mt-4" >
-               <div className="flex justify-between font-bold pb-2">
-                  <span className="text-[14px]">{categories[1] ?.name}</span>
-                  <span onClick={() => goToCategory(categories[1] ?.id)}>Tất cả</span>
-                </div>
-                <ProductList products={grid1} />
-              </div>
-            )
-          
-          }
-          {grid2 ?.data.length > 0 &&
-            (
-              <div className="mt-4">
-                <div className="flex justify-between font-bold pb-2">
-                  <span className="text-[14px]">{categories[2] ?.name}</span>
-                  <span onClick={() => goToCategory(categories[2] ?.id)}> Tất cả</span>
-                </div>
-                <ProductList products={grid2} />
-              </div>
-            )
-          }
+          { categoriesHome.map(el => renderProductsCategories(el)) }
         </div>
       </Suspense>
       <div className="mb-[50px]"></div>

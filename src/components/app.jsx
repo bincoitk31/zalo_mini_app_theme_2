@@ -17,9 +17,12 @@ import Address from '../pages/address';
 import HistoryOrder from '../pages/history-orders';
 import Contact from '../pages/contact';
 
+import settings from '../../app-settings.json'
+
 const MyApp = () => {
   localStorage.removeItem('isAuth')
   console.log(import.meta, "metaa")
+  console.log(settings, "settingss")
   useEffect(() => {
     const API_URL = import.meta.env.VITE_ENV == 'DEV' ? 'http://localhost:24679/' : 'https://api.storecake.io/'
     const script = document.createElement("script");
