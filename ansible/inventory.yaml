@@ -1,0 +1,6 @@
+zalo_mini_app:
+  hosts:
+    citusdb:
+      ansible_host: 10.1.5.180
+  vars:
+    ansible_user: cc
