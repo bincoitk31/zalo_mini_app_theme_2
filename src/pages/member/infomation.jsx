@@ -127,7 +127,7 @@ const Infomation = () => {
           </div>
         :
         <div>
-          <div onClick={() => loginStorecake()} className="flex justify-between items-center py-2">
+          <div onClick={() => authorizeUser()} className="flex justify-between items-center py-2">
             <div className="flex items-center">
               <div><SignIn size={20} color="#141415" /></div>
               <div className="text-[12px] text-center pl-2">Đăng nhập / đăng ký thành viên</div>
