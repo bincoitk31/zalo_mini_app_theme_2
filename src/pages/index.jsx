@@ -1,21 +1,20 @@
 import React, { Suspense, useEffect, useState } from "react";
 import { Page } from "zmp-ui";
-import { useRecoilValue, useRecoilState, useSetRecoilState } from "recoil"
+import { useRecoilValue, useRecoilState, useSetRecoilState } from "recoil";
 import { carouselState } from "../recoil/atoms";
-import { categoryStore, categoriesState, categoryChooseState  } from "../recoil/category";
+import { categoryStore, categoriesState, categoryChooseState, categoriesHomeState } from "../recoil/category";
 import { useNavigate } from "react-router-dom";
-import { Gift, ShoppingBag, ShoppingCart, Truck, Star, CaretRight } from "@phosphor-icons/react";
 import { Input, Button } from "antd";
-import { authorize, getPhoneNumber, getAccessToken, getUserInfo, followOA, unfollowOA } from "zmp-sdk/apis";
+import { authorize, getPhoneNumber, getAccessToken, getUserInfo } from "zmp-sdk/apis";
 import { getApiAxios } from '../utils/request';
-import { memberZaloState, phoneMemberZaloState } from "../recoil/member"
+import { memberZaloState, phoneMemberZaloState } from "../recoil/member";
 
 import Carousel from "../components/carousel";
 import ListCategory from "../components/list-categoy";
 import ProductList from "../components/product-list";
 import FollowOA from "../components/follow-oa";
 
-import settings from "../../app-settings.json"
+import settings from "../../app-settings.json";
 
 const HomePage = () => {
   const CATEGORIES_HOME = settings ?.categories_home || []
@@ -26,7 +25,7 @@ const HomePage = () => {
   const [memberZalo ,setMemberZalo] = useRecoilState(memberZaloState)
   const [categoryChoose, setCategoryChoose] = useRecoilState(categoryChooseState)
   const setPhoneMemberZalo = useSetRecoilState(phoneMemberZaloState)
-  const [categoriesHome, setCategoriesHome] = useState([])
+  const [categoriesHome, setCategoriesHome] = useRecoilState(categoriesHomeState)
 
   const getUser = async () => {
     try {
@@ -129,6 +128,37 @@ const HomePage = () => {
     navigate(path)
   }
 
+  const fetchCategories = async () => {
+    const updatedCategories = []
+
+    for (const category of CATEGORIES_HOME) {
+      try {
+        const res = await categoryStore("getCategoryById", { id: category.id });
+
+        if (res.status === 200) {
+          if (res.data.products && res.data.products.data.length > 0) {
+            updatedCategories.push({
+              ...category,
+              products: res.data.products,
+            });
+          }
+
+        }
+      } catch (error) {
+        console.error("Error fetching category:", error);
+      }
+    }
+    setCategoriesHome(updatedCategories)
+  }
+
+  const getCategories = async () => {
+    const res = await categoryStore('getCategories')
+    console.log(res, "get Categoriesssss")
+    if (res.status == 200) {
+      setCategories(res.data.categories)
+    }
+  }
+
   useEffect(() => {
     // if (!localStorage.getItem("isAuth")) {
     //   authorizeUser()
@@ -136,41 +166,12 @@ const HomePage = () => {
   }, [])
 
   useEffect(() => {
-    categoryStore('getCategories')
-    .then(res => {
-      console.log(res, "get Categoriesssss")
-      if (res.status == 200) {
-        setCategories(res.data.categories)
-      }
-    })
+    
   }, [])
 
   useEffect(() => {
-    const fetchCategories = async () => {
-      const updatedCategories = []
-
-      for (const category of CATEGORIES_HOME) {
-        try {
-          const res = await categoryStore("getCategoryById", { id: category.id });
-
-          if (res.status === 200) {
-            if (res.data.products && res.data.products.data.length > 0) {
-              updatedCategories.push({
-                ...category,
-                products: res.data.products,
-              });
-            }
-
-          }
-        } catch (error) {
-          console.error("Error fetching category:", error);
-        }
-      }
-      setCategoriesHome(updatedCategories)
-    }
-
-    fetchCategories()
-
+    if (categoriesHome.length === 0) fetchCategories()
+    if (categories.length === 0) getCategories()
   }, [])
 
   return (

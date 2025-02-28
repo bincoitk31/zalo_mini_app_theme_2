@@ -15,3 +15,8 @@ export const phoneMemberZaloState = atom({
   key: "phoneMemberZalo",
   default: ''
 })
+
+export const customerState = atom({
+  key: "customer",
+  default: {}
+})

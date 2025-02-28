@@ -173,7 +173,7 @@ console.log(productView, "pppp")
   return (
     <>
       <div className="mt-[36px] overflow-y-auto bg-[#fff] h-[calc(100vh-89px)]" >
-        <SliderProduct images={productView.variations[0].images || []} />
+        <SliderProduct images={productView ?.variations[0].images || []} />
         <div className="px-2">
           <div className="mt-2 font-medium text-[18px]">{productView.name}</div>
           <div className="font-medium">{getRetailPrice()}</div>

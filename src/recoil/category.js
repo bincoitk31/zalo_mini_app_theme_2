@@ -16,6 +16,11 @@ export const termSearchState = atom({
   default: ''
 })
 
+export const categoriesHomeState = atom({
+  key: "categoriesHome",
+  default: []
+})
+
 export const categoryStore = (type, payload = {}) => {
   const getCategories = async () => {
     return await getApi("/categories")

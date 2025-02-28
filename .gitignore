@@ -39,3 +39,4 @@ www/
 
 #package
 package-lock.json
+app-settings.json

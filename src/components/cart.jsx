@@ -61,11 +61,11 @@ const Cart = () => {
             <div className="font-medium"> {formatNumber(totalPrice)} </div>
           </div>
           <div className="w-full">
-            <Button disabled={cartItems.length == 0 ? true : false} color="default" variant="solid" className="w-full h-[36px] my-2 rounded-[4px]" onClick={submitOrder}> 
+            <Button disabled={(cartItems || []).length == 0 ? true : false} color="default" variant="solid" className="w-full h-[36px] my-2 rounded-[4px]" onClick={submitOrder}> 
               <div className="flex font-bold">
               <span>Thanh toán ngay</span>
               <span><DotOutline size={20} color="#fff" weight="fill" /></span>
-              <span>{cartItems.length || 0}</span>
+              <span>{(cartItems || []).length || 0}</span>
               <span className="pl-1">sản phẩm</span>
               </div>
             </Button>

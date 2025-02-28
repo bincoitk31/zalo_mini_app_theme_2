@@ -36,7 +36,7 @@ const AddToCart = () => {
   }
     
   const renderImg = () => {
-   return product.variations[0].images[0] || ''
+   return product ?.variations[0] ?.images[0] || ''
   }
 
   const handleSelectAttribute = (name, value) => {

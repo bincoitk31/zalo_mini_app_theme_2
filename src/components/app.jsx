@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Route} from 'react-router-dom'
 import { App, ZMPRouter, AnimationRoutes, SnackbarProvider } from 'zmp-ui';
 import { RecoilRoot } from 'recoil';
+import { nativeStorage } from "zmp-sdk/apis";
 
 import HomePage from '../pages';
 import Product from '../pages/product/index';
@@ -21,6 +22,7 @@ import settings from '../../app-settings.json'
 
 const MyApp = () => {
   localStorage.removeItem('isAuth')
+  
   console.log(import.meta, "metaa")
   console.log(settings, "settingss")
   useEffect(() => {
