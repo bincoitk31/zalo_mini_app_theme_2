@@ -89,18 +89,18 @@ const Infomation = () => {
   const loginStorecake = async () => {
     try {
       let url = "/login"
-      // let data = {
-      //   phone_number: phoneNumber,
-      //   avatar: memberZalo.avatar,
-      //   name: memberZalo.name,
-      //   zalo_id: memberZalo.id
-      // }
       let data = {
-        phone_number: '84328821098',
-        avatar: 'https://content.pancake.vn/1.1/s450x450/fwebp/87/12/e9/86/59eb6fdc125b4840df72b830615bafd86e3bfcc3bbf6a92beef2efca.png',
-        name: 'HungBin',
-        zalo_id: "2345684758342"
+        phone_number: phoneNumber,
+        avatar: memberZalo.avatar,
+        name: memberZalo.name,
+        zalo_id: memberZalo.id
       }
+      // let data = {
+      //   phone_number: '84328821098',
+      //   avatar: 'https://content.pancake.vn/1.1/s450x450/fwebp/87/12/e9/86/59eb6fdc125b4840df72b830615bafd86e3bfcc3bbf6a92beef2efca.png',
+      //   name: 'HungBin',
+      //   zalo_id: "2345684758342"
+      // }
       const res = await postApi(url, data)
       if (res.status == 200) {
         console.log(res, "resss")
