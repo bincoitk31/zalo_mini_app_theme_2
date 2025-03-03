@@ -125,16 +125,13 @@ const Checkout = () => {
     return items
   }
 
-  const checkValidForm = () => {
+  const handleOrder = () => {
     if (!customerInfo ?.full_name) return message.error("Tên không được để trống!")
     if (!customerInfo ?.phone_number) return message.error("Số điện thoại không được để trống!")
     if (!validatePhoneNumber(customerInfo ?.phone_number)) return message.error("Số điện thoại không hợp lệ!")
     if (customerInfo ?.email && !isValidEmail(customerInfo ?.email)) return message.error("Email hợp lệ!")
     if (!customerInfo ?.province_id || !customerInfo ?.district_id || !customerInfo ?.commune_id) return message.error("Địa chỉ không được để trống!")
-  }
 
-  const handleOrder = async () => {
-    checkValidForm()
     createOrderZalo()
   }
 
