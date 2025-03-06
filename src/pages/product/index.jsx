@@ -7,6 +7,7 @@ import { formatNumber } from "../../utils/formatNumber"
 import { useNavigate } from "react-router-dom"
 import { activeTabState } from "../../recoil/atoms"
 import {WechatLogo} from '@phosphor-icons/react'
+import { openChat } from "zmp-sdk/apis"
 
 import SliderProduct from "./slider-product"
 import TabsProduct from "./tabs-product"
@@ -161,6 +162,19 @@ console.log(productView, "pppp")
     setTypeAddCartState(type)
   }
 
+  const openChatScreen = async () => {
+    try {
+      let oa_id = import.meta.env.VITE_ZALO_OA_ID
+      await openChat({
+        type: "oa",
+        id: oa_id,
+        message: "Xin Chào",
+      });
+    } catch (error) {
+      // xử lý khi gọi api thất bại
+      console.log(error);
+    }
+  }
 
   useEffect(() => {
     console.log("attributeSelected updated:", attributeSelected);
@@ -204,7 +218,7 @@ console.log(productView, "pppp")
       </div>
       <div className="bg-[#fff] border-t border-t-solid border-t-[#fafafa] fixed bottom-0 w-full">
         <div className="flex px-3 items-center">
-          <div className="mr-2">
+          <div className="mr-2" onClick={() => openChatScreen()}>
             <WechatLogo size={32} color="#292929" weight="light" />
           </div>
           <div className="flex w-full">
