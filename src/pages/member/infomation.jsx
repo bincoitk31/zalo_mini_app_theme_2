@@ -1,8 +1,10 @@
 import { memberZaloState, phoneMemberZaloState, customerState } from "../../recoil/member"
 import { useRecoilState } from "recoil"
 import { SignIn, CaretRight } from "@phosphor-icons/react"
-import { authorize, getPhoneNumber, getAccessToken, getUserInfo } from "zmp-sdk/apis"
+import { authorize, getPhoneNumber, getAccessToken, getUserInfo, nativeStorage } from "zmp-sdk/apis"
 import { getApiAxios, postApi } from '../../utils/request'
+import { setDataToStorage, getDataToStorage } from '../../utils/tools'
+import { useEffect } from "react"
 
 const Infomation = () => {
   const [phoneNumber, setPhoneMember] = useRecoilState(phoneMemberZaloState)
@@ -56,12 +58,13 @@ const Infomation = () => {
     getApiAxios(url, {headers: options})
     .then(res => {
       if (res.status == 200) {
-        setPhoneMember(res.data.data.number)
-        setMemberZalo(userInfo)
-        // get thông tin khách hàng qua sdt từ store
-        console.log(res, "res phone_numberrr")
-        console.log(userInfo, "memberrrr")
-        loginStorecake()
+        let data = {
+          phone_number: res.data.data.number,
+          avatar: userInfo.avatar,
+          name: userInfo.name,
+          zalo_id: userInfo.id
+        }
+        loginStorecake(data)
 
       }
     })
@@ -73,7 +76,6 @@ const Infomation = () => {
       const data = await authorize({
         scopes: ["scope.userPhonenumber", "scope.userInfo"],
       });
-      console.log(data, "AUthh");
       localStorage.setItem('isAuth', true)
       if (data['scope.userPhonenumber'] && data['scope.userInfo']) {
         //get sdt khách
@@ -86,43 +88,36 @@ const Infomation = () => {
     }
   };
 
-  const loginStorecake = async () => {
+  const loginStorecake = async (data) => {
     try {
       let url = "/login"
-      let data = {
-        phone_number: phoneNumber,
-        avatar: memberZalo.avatar,
-        name: memberZalo.name,
-        zalo_id: memberZalo.id
-      }
-      // let data = {
-      //   phone_number: '84328821098',
-      //   avatar: 'https://content.pancake.vn/1.1/s450x450/fwebp/87/12/e9/86/59eb6fdc125b4840df72b830615bafd86e3bfcc3bbf6a92beef2efca.png',
-      //   name: 'HungBin',
-      //   zalo_id: "2345684758342"
-      // }
       const res = await postApi(url, data)
       if (res.status == 200) {
-        console.log(res, "resss")
         setCustomer(res.data.customer)
+        setDataToStorage('customerStore', res.data.customer)
       }
     } catch(error) {
       console.log(error, "Error login storecake")
     }
   }
 
+  useEffect(()=> {
+    const customerStore = getDataToStorage('customerStore')
+    if (customerStore) setCustomer(customerStore)
+  }, [])
+
   return (
     <>
       <div>
         <div className="font-bold"> Thông tin khách hàng </div>
-        {memberZalo.id ?
+        {customer.id ?
           <div className="flex pt-2">
             <div>
-              <img src={memberZalo.avatar} className="w-[50px] h-[50px] rounded-full"/>
+              <img src={customer.avatar} className="w-[50px] h-[50px] rounded-full"/>
             </div>
             <div className="pl-2">
-              <div>{memberZalo.name}</div>
-              <div>{phoneNumber}</div>
+              <div>{customer.name}</div>
+              <div>{customer.phone_number}</div>
             </div>
           </div>
         :

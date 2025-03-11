@@ -25,7 +25,6 @@ const Address = () => {
       if (el.id == value.id) return {...el, default: true}
       return {...el, default: false}
     })
-    console.log(newListAddress, 'vcc')
     setListAddress(newListAddress)
     localStorage.setItem('list-address', JSON.stringify(newListAddress))
     setCustomerInfo(value)
@@ -39,7 +38,6 @@ const Address = () => {
 
   useEffect(() => {
     const list_address = JSON.parse(localStorage.getItem('list-address') || '[]')
-    console.log(list_address, "lisstt")
     setListAddress(list_address)
   }, [])
 

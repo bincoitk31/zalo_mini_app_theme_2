@@ -7,7 +7,7 @@ import { formatNumber } from "../../utils/formatNumber"
 import { useNavigate } from "react-router-dom"
 import { validatePhoneNumber, isValidEmail } from "../../utils/tools"
 import { activeTabState } from "../../recoil/atoms"
-import { memberZaloState, phoneMemberZaloState } from "../../recoil/member"
+import { memberZaloState, phoneMemberZaloState, customerState } from "../../recoil/member"
 import { AirplaneTilt, Package, User, MapPinLine, Plus } from '@phosphor-icons/react'
 import { listAddressState, openAddAddressState } from "../../recoil/order"
 import { Payment, events, EventName } from "zmp-sdk/apis"
@@ -19,12 +19,11 @@ import CryptoJS from "crypto-js";
 
 const Checkout = () => {
   const setActiveTab = useSetRecoilState(activeTabState)
-  const memberZalo = useRecoilValue(memberZaloState)
-  const phoneMemberZalo = useRecoilValue(phoneMemberZaloState)
   const totalPrice = useRecoilValue(totalPriceState)
   const amountPrice = useRecoilValue(amountPriceState)
   const setOpenAddAddress = useSetRecoilState(openAddAddressState)
-  
+  const [customer, setCustomer] = useRecoilState(customerState)
+
   console.log(import.meta.env.VITE_APP_ID, "app_iddd")
 
   const navigate = useNavigate()
@@ -39,8 +38,8 @@ const Checkout = () => {
   const [provinceId, setProvinceId] = useState()
   const [districtId, setDistrictId] = useState()
   const [communeId, setCommuneId] = useState()
-  const [fullName, setFullName] = useState(memberZalo ?.name)
-  const [phoneNumber, setPhoneNumber] = useState(phoneMemberZalo)
+  const [fullName, setFullName] = useState(customer ?.name)
+  const [phoneNumber, setPhoneNumber] = useState(customer ?.phone_number)
   const [email, setEmail] = useState()
   const [detectAddress, setDetectAddress] = useState()
   const [note, setNote] = useState()
@@ -141,7 +140,8 @@ const Checkout = () => {
       order_items: setOrderItems(),
       shipping_address: {...customerInfo, note: note},
       zalo_order_id: zalo_order_id,
-      location: `https://zalo.me/s/${import.meta.env.VITE_APP_ID}/`
+      location: `https://zalo.me/s/${import.meta.env.VITE_APP_ID}/`,
+      customer: customer
     }
 
 

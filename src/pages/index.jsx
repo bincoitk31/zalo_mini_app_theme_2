@@ -4,10 +4,8 @@ import { useRecoilValue, useRecoilState, useSetRecoilState } from "recoil";
 import { carouselState } from "../recoil/atoms";
 import { categoryStore, categoriesState, categoryChooseState, categoriesHomeState } from "../recoil/category";
 import { useNavigate } from "react-router-dom";
-import { Input, Button } from "antd";
-import { authorize, getPhoneNumber, getAccessToken, getUserInfo } from "zmp-sdk/apis";
-import { getApiAxios } from '../utils/request';
-import { memberZaloState, phoneMemberZaloState } from "../recoil/member";
+import { memberZaloState, phoneMemberZaloState, customerState } from "../recoil/member";
+import { getDataToStorage } from '../utils/tools';
 
 import Carousel from "../components/carousel";
 import ListCategory from "../components/list-categoy";
@@ -26,85 +24,7 @@ const HomePage = () => {
   const [categoryChoose, setCategoryChoose] = useRecoilState(categoryChooseState)
   const setPhoneMemberZalo = useSetRecoilState(phoneMemberZaloState)
   const [categoriesHome, setCategoriesHome] = useRecoilState(categoriesHomeState)
-
-  const getUser = async () => {
-    try {
-      const { userInfo } = await getUserInfo({});
-      console.log(userInfo, "userInfooo")
-      setMemberZalo(userInfo)
-      console.log(memberZalo)
-    } catch (error) {
-      // xử lý khi gọi api thất bại
-      console.log(error)
-    }
-  }
-
-  const getTokenUser = async () => {
-    try {
-      let token = await getAccessToken({});
-      console.log(token, "rrrrrrrr")
-      return token
-    } catch (error) {
-      // xử lý khi gọi api thất bại
-      console.log(error, "error get tokenn");
-      return null
-    }
-  };
-
-  const getCode = async () => {
-    try {
-      let res = await getPhoneNumber({})
-      return res.token
-    } catch (error) {
-      console.log(error)
-      return null
-    }
-  }
-
-  const getPhoneNumberFromToken = async () => {
-    let token = await getTokenUser()
-    let code = await getCode()
-    let secretKey = import.meta.env.VITE_ZALO_SECRET_KEY
-
-    console.log(token, "TÔkenn")
-    console.log(code, "codeeee")
-
-    let url = "https://graph.zalo.me/v2.0/me/info"
-    let options = {
-      code: code,
-      access_token: token,
-      secret_key: secretKey,
-    }
-    console.log(options, "optionss")
-    getApiAxios(url, {headers: options})
-    .then(res => {
-      console.log(res, "getPHONEEEE")
-      if (res.status == 200) {
-        setPhoneMemberZalo(res.data.data.number)
-        // get thông tin khách hàng qua sdt từ store
-      }
-    })
-    .catch(err => console.log("get phonenumber error", err))
-  }
-
-  const authorizeUser = async () => {
-    try {
-      const data = await authorize({
-        scopes: ["scope.userPhonenumber", "scope.userInfo"],
-      });
-      console.log(data, "AUthh");
-      localStorage.setItem('isAuth', true)
-      if (data['scope.userPhonenumber'] && data['scope.userInfo']) {
-        //get sdt khách
-        getUser()
-        getPhoneNumberFromToken()
-      }
-
-    } catch (error) {
-      // xử lý khi gọi api thất bại
-      console.log(error);
-    }
-  };
+  const [customer, setCustomer] = useRecoilState(customerState)
 
   const renderProductsCategories = (category) => {
     console.log(category, "categoryyy")
@@ -153,20 +73,14 @@ const HomePage = () => {
 
   const getCategories = async () => {
     const res = await categoryStore('getCategories')
-    console.log(res, "get Categoriesssss")
     if (res.status == 200) {
       setCategories(res.data.categories)
     }
   }
 
   useEffect(() => {
-    // if (!localStorage.getItem("isAuth")) {
-    //   authorizeUser()
-    // }
-  }, [])
-
-  useEffect(() => {
-    
+    const customerStore = getDataToStorage('customerStore')
+    if (customerStore) setCustomer(customerStore)
   }, [])
 
   useEffect(() => {

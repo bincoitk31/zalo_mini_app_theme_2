@@ -3,12 +3,8 @@ import {Carousel} from 'antd'
 
 const SliderProduct = ({images}) => {
   const [current, setCurrent] = useState(0)
-  console.log(images.length, "iiiii")
-
-  
 
   const renderNav = () => {
-    console.log(images, "imgggg")
     return (
       images.map((src, idx) => (
         <div key={idx} className="w-full h-[360px]">
@@ -19,7 +15,6 @@ const SliderProduct = ({images}) => {
   }
 
   const afterChange = (number) => {
-    console.log(number, "numm")
     setCurrent(number)
   }
 

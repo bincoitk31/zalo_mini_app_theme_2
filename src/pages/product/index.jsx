@@ -4,10 +4,11 @@ import { productState, drawerAddCartState, typeAddCartState } from "../../recoil
 import { addCartState } from "../../recoil/selectors"
 import { Button, message } from "antd"
 import { formatNumber } from "../../utils/formatNumber"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { activeTabState } from "../../recoil/atoms"
 import {WechatLogo} from '@phosphor-icons/react'
 import { openChat } from "zmp-sdk/apis"
+import { getApi} from "../../utils/request"
 
 import SliderProduct from "./slider-product"
 import TabsProduct from "./tabs-product"
@@ -15,80 +16,15 @@ import QuantityProduct from "../../components/quantity-product"
 import Description from "./description"
 
 const Product = () => {
+  const {id} = useParams()
   const setActiveTab = useSetRecoilState(activeTabState)
   const navigate = useNavigate()
-  const productView = useRecoilValue(productState)
+  const [productView, setProductView] = useRecoilState(productState)
   const [attributeSelected, setAttributeSelected] = useState([])
   const [cartItems, setCartItems] = useRecoilState(addCartState)
   const [quantity, setQuantity] = useState(1)
   const [drawerAddCart, setDrawerAddCart] = useRecoilState(drawerAddCartState)
   const setTypeAddCartState = useSetRecoilState(typeAddCartState)
-
-  let result = []
-console.log(productView, "pppp")
-  const handleSelectAttribute = (name, value) => {
-    let idx = attributeSelected.findIndex(el => el.name == name)
-
-    const updatedAttributes = idx > -1
-      ? attributeSelected.map((el, index) =>
-          index === idx ? { ...el, value } : el
-        )
-      : [...attributeSelected, { name, value }];
-
-    setAttributeSelected(updatedAttributes);
-  }
-
-  const renderFields = () => {
-    productView.variations.forEach((variation) => {
-      variation.fields.forEach((field) => {
-        // Tìm nếu field đã tồn tại trong kết quả
-        let existing = result.find((item) => item.name === field.name);
-        if (existing) {
-          // Nếu tồn tại, thêm giá trị nếu chưa có
-          if (!existing.values.includes(field.value)) {
-            existing.values.push(field.value);
-          }
-        } else {
-          // Nếu chưa tồn tại, thêm field vào kết quả
-          result.push({ name: field.name, values: [field.value] });
-        }
-      });
-    });
-
-    // // Sắp xếp giá trị để tránh sự khác biệt thứ tự
-    // result.forEach((item) => item.values.sort());
-    console.log(result, "resulttttt")
-
-    const checkActive = (name, value) => {
-      if (attributeSelected.find(el => el.name == name && el.value == value)) return 'border-sky-600'
-      return 'border-black'
-    }
-
-    return (
-      <>
-      {
-        result.map((el, idx) => (
-          <div key={idx} className="pb-2">
-            <div className="font-bold pb-1">{el.name}</div>
-            <div className="flex">
-              {
-                el.values.map(v => (
-                  <div
-                    key={v}
-                    onClick={() => handleSelectAttribute(el.name, v)}
-                    className={`${checkActive(el.name, v)} mr-2 flex items-center justify-center w-[30px] h-[30px] border border-solid rounded-full`}
-                  >
-                    {v}
-                  </div>
-                ))
-              }
-            </div>
-          </div>
-        ))
-      }
-      </>
-    )
-  }
 
   const findVariation = () => {
     const areFieldsEqual = (fields1, fields2) => {
@@ -117,20 +53,8 @@ console.log(productView, "pppp")
     message.success('Thêm vào giỏ hàng thành công', [2])
   }
 
-  const handleChangeQuantity = (value) => {
-    console.log(value, "valllll")
-    setQuantity(value);
-    // if (/^\d*$/.test(value)) {
-    //   setQuantity(value);
-    // }
-  }
-
-  const onChangeCarousel = (current) => {
-    console.log(current, "current")
-  }
-
   const getRetailPrice = () => {
-    let variations = productView.variations || []
+    let variations = productView ?.variations || []
     let arrayPrice = variations.map(el => el.retail_price)
     let min = Math.min(...arrayPrice) || 0
     let max = Math.max(...arrayPrice) || 0
@@ -149,12 +73,6 @@ console.log(productView, "pppp")
     let result = (min == max || arrayPrice.length == 0) ? formatNumber(max) : `${formatNumber(min)} - ${formatNumber(max)}`
 
     return result
-  }
-
-  const buyNow = () => {
-    addTocart()
-    navigate('/checkout')
-
   }
 
   const onOpenDrawerAddCart = (type) => {
@@ -184,36 +102,25 @@ console.log(productView, "pppp")
     setActiveTab('product')
   }, [])
 
+  useEffect(() => {
+    getApi(`/products/${id}`)
+    .then(res => {
+      if (res.status == 200) {
+        const product = res.data.product
+        setProductView(product)
+      }
+    })
+  }, [id])
+
   return (
     <>
       <div className="mt-[36px] overflow-y-auto bg-[#fff] h-[calc(100vh-89px)]" >
-        <SliderProduct images={productView ?.variations[0].images || []} />
-        <div className="px-2">
-          <div className="mt-2 font-medium text-[18px]">{productView.name}</div>
-          <div className="font-medium">{getRetailPrice()}</div>
-          {/* <div className="flex mt-2 pb-2">
-            <div>
-              <span className="font-bold pr-1">SKU:</span>
-              <span className="text-cyan-700"> {productView.custom_id} </span>
-            </div>
-            <div className="px-2"> | </div>
-            <div>
-              <span className="font-bold pr-1">Đã bán:</span>
-              <span className="text-cyan-700">{productView.total_sold_web}</span>
-            </div>
-          </div>
-          {renderFields()}
-          <div className="flex my-2">
-            <div className="text-red-600 pr-4 text-[18px]">{getRetailPrice()}</div>
-            <div className="line-through text-stone-800 text-[16px]">{getOriginalPrice()}</div>
-          </div>
-          <QuantityProduct quantity={quantity} changeQuantity={handleChangeQuantity} /> */}
-          {/* <Button type="primary" variant="solid" className="my-2 w-full h-[46px] my-2" onClick={() => addTocard()}> Thêm vào giỏ hàng</Button>
-          <Button color="danger" variant="solid" className="w-full h-[46px] my-2" onClick={() => buyNow()}> Mua ngay</Button> */}
+        <SliderProduct images={ productView && productView ?.variations ? productView.variations[0].images : []} />
 
-          {/* <TabsProduct product={productView} /> */}
-          
-          <Description product={productView}/>
+        <div className="px-2">
+          <div className="mt-2 font-medium text-[18px]">{productView ?.name}</div>
+          <div className="font-medium">{getRetailPrice()}</div>
+          <Description product={productView ||{}}/>
         </div>
       </div>
       <div className="bg-[#fff] border-t border-t-solid border-t-[#fafafa] fixed bottom-0 w-full">
