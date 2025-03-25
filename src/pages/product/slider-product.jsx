@@ -26,7 +26,6 @@ const SliderProduct = ({images}) => {
       <div className="absolute bottom-0 right-4 bg-[#0000003b] text-[12px] text-[#fff] px-2 rounded-t-[4px]">
         {current + 1} / {images.length}
       </div>
-    
     </div>
   );
 }

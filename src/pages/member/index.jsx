@@ -6,6 +6,7 @@ import Coupon from "./coupon"
 import HistoryOrder from "./history-order"
 import TrackingOrder from "./tracking-order"
 import FollowOA from "../../components/follow-oa"
+import ShareLink from "../../components/share-link";
 
 const Member = () => {
   const navigate = useNavigate()
@@ -57,16 +58,9 @@ const Member = () => {
           </div>
         </div>
       </div>
-
-      {/* <div className="bg-[#fff] m-2 p-3 rounded-lg">
-        { type == '1' && <Infomation /> }
-        { type == '2' && <Coupon />}
-        { type == '3' && <TrackingOrder />}
-        { type == '4' && <HistoryOrder />}
-      </div> */}
       
       <FollowOA />
-
+      <ShareLink />
     </div>
   )
 }

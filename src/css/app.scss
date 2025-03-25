@@ -36,4 +36,16 @@
     margin: 0 !important;
     padding: 8px;
   }
+  .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+    color: #000000;
+  }
+  .ant-tabs-ink-bar {
+    background: #000000;
+  }
+  .ant-tabs-tab:hover {
+    color: #000000
+  }
+  .ant-tabs-tab-btn:active {
+    color: #000000;
+  }
 }

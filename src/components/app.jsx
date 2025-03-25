@@ -17,8 +17,10 @@ import Search from '../pages/search';
 import Address from '../pages/address';
 import HistoryOrder from '../pages/history-orders';
 import Contact from '../pages/contact';
+import Blog from '../pages/blog';
 
 import settings from '../../app-settings.json'
+import Article from '../pages/blog/article';
 
 const MyApp = () => {
   localStorage.removeItem('isAuth')
@@ -60,6 +62,8 @@ const MyApp = () => {
             <Route path="/address" element={<Address />}></Route>
             <Route path="/history-order" element={<HistoryOrder />}></Route>
             <Route path="/contact" element={<Contact />}></Route>
+            <Route path="/blog" element={<Blog />}></Route>
+            <Route path="/blog/article" element={<Article />}></Route>
           </AnimationRoutes>
           <FooterCustom />
         </ZMPRouter>

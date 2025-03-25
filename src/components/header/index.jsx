@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { activeTabState } from "../../recoil/atoms";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { memberZaloState } from "../../recoil/member";
-import { CaretLeft, HouseLine, MagnifyingGlass } from '@phosphor-icons/react'
+import { CaretLeft, HouseLine, MagnifyingGlass } from '@phosphor-icons/react';
 import { Input } from "antd";
 import { termSearchState } from "../../recoil/category";
 
@@ -38,17 +38,25 @@ const HeaderCustom = () => {
     navigate('/search')
   }
 
+  const handleSearchBlog = (e) => {
+    console.log(e.target.value)
+  }
+
   useEffect(() => {
     console.log(location.pathname, "oo")
-    if (location.pathname == "/") return setActiveTab('home')
-    if (location.pathname == "/categories") return setActiveTab("categories")
-    if (location.pathname == "/cart") return setActiveTab('cart')
-    if (location.pathname == "/member") return setActiveTab('member')
-    if (location.pathname == "/checkout") return setActiveTab('checkout')
-    if (location.pathname == "/address") return setActiveTab('address')
-    if (location.pathname == "/search") return setActiveTab('search')
-    if (location.pathname == "/history-order") return setActiveTab('history-order')
-    if (location.pathname == "/contact") return setActiveTab('contact')
+    const tabMapping = {
+      "/": "home",
+      "/categories": "categories",
+      "/cart": "cart",
+      "/member": "member",
+      "/checkout": "checkout",
+      "/address": "address",
+      "/search": "search",
+      "/history-order": "history-order",
+      "/contact": "contact",
+      "/blog": "blog",
+    };
+    setActiveTab(tabMapping[location.pathname] || "home");
   }, [location])
 
   useEffect(() => {
@@ -191,6 +199,41 @@ const HeaderCustom = () => {
           </div>
         </div>
       }
+
+      {
+        activeTab == 'blog' &&
+        <div className="fixed w-full z-[999]">
+          <div className="flex bg-[#000] p-2">
+            <div className="text-[#fff] text-[14px] flex items-center">
+              <HouseLine onClick={goHome} size={20} color="#ffffff" weight="bold" />
+              <div className="pl-3 w-[250px]">
+                <Input
+                  placeholder="Tìm kiếm thông tin"
+                  size="small"
+                  className="!bg-[#d9d9d9] rounded-full"
+                  prefix={
+                    <MagnifyingGlass size={16} color="#888" weight="light" />
+                  }
+                  onPressEnter={handleSearchBlog}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+
+      {
+        activeTab == 'article' &&
+        <div className="fixed w-full z-[999]">
+          <div className="flex bg-[#000] p-2">
+            <div className="text-[#fff] text-[14px] flex items-center">
+              <CaretLeft onClick={goBack} size={20} color="#ffffff" weight="light" />
+              <div className="font-bold">Bài viết</div>
+            </div>
+          </div>
+        </div>
+      }
+
     </>
   )
 };

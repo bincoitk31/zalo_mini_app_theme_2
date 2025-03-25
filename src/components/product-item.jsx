@@ -51,7 +51,7 @@ const ProductItem = ({product}) => {
   return (
     <div className="border border-solid border-[#eee] rounded-lg overflow-hidden" onClick={() => goToProduct(product.id)}>
       <div>
-        <img src={product ?.variations[0] ?.images[0] || ""} className="object-cover w-full h-[160px]" />
+        <img src={product ?.variations[0] && product ?.variations[0] ?.images[0] || ""} className="object-cover w-full h-[160px]" />
       </div>
       <div className="px-2 pt-2 pb-4">
         <div className="font-medium text-truncate-2-line pb-1 h-11">{product.name}</div>

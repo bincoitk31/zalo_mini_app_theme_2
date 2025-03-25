@@ -6,16 +6,18 @@ import { categoryStore, categoriesState, categoryChooseState, categoriesHomeStat
 import { useNavigate } from "react-router-dom";
 import { memberZaloState, phoneMemberZaloState, customerState } from "../recoil/member";
 import { getDataToStorage } from '../utils/tools';
+import { blogStore, blogHomeState } from "../recoil/blog";
 
 import Carousel from "../components/carousel";
 import ListCategory from "../components/list-categoy";
 import ProductList from "../components/product-list";
 import FollowOA from "../components/follow-oa";
-
+import Articles from "../components/articles";
 import settings from "../../app-settings.json";
 
 const HomePage = () => {
   const CATEGORIES_HOME = settings ?.categories_home || []
+  const CATEGORY_BLOG = settings ?.category_blog
 
   const navigate = useNavigate()
   const carousel = useRecoilValue(carouselState)
@@ -25,6 +27,7 @@ const HomePage = () => {
   const setPhoneMemberZalo = useSetRecoilState(phoneMemberZaloState)
   const [categoriesHome, setCategoriesHome] = useRecoilState(categoriesHomeState)
   const [customer, setCustomer] = useRecoilState(customerState)
+  const [blogHome, setBlogHome] = useRecoilState(blogHomeState)
 
   const renderProductsCategories = (category) => {
     console.log(category, "categoryyy")
@@ -78,6 +81,14 @@ const HomePage = () => {
     }
   }
 
+  const getCategoryBlog = async () => {
+    const res = await blogStore('getArticles', { category_id: CATEGORY_BLOG, page: 1, limit: 10})
+    if (res.status == 200) {
+      console.log(res, "arrticleeee")
+      setBlogHome(res.data.result)
+    }
+  }
+
   useEffect(() => {
     const customerStore = getDataToStorage('customerStore')
     if (customerStore) setCustomer(customerStore)
@@ -86,6 +97,7 @@ const HomePage = () => {
   useEffect(() => {
     if (categoriesHome.length === 0) fetchCategories()
     if (categories.length === 0) getCategories()
+    if (!blogHome) getCategoryBlog()
   }, [])
 
   return (
@@ -155,6 +167,7 @@ const HomePage = () => {
         <div className="section-container">
           <ListCategory />
           { categoriesHome.map(el => renderProductsCategories(el)) }
+          <Articles blog={blogHome}/>
         </div>
       </Suspense>
       <div className="mb-[50px]"></div>
