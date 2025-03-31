@@ -1,6 +1,6 @@
-import React from "react"
-import { totalPriceState, amountPriceState, cartItemsState } from "../recoil/order"
-import {  useRecoilValue } from "recoil"
+import React, { useEffect } from "react"
+import { totalPriceState, amountPriceState, cartItemsState, discountCouponState } from "../recoil/order"
+import {  useRecoilValue, useRecoilState } from "recoil"
 import { formatNumber } from "../utils/formatNumber"
 import { Button } from "antd"
 import { useNavigate } from "react-router-dom"
@@ -8,7 +8,13 @@ import { useNavigate } from "react-router-dom"
 const Bill = () => {
   const navigate = useNavigate()
   const totalPrice = useRecoilValue(totalPriceState)
-  const amountPrice = useRecoilValue(amountPriceState)
+  const [amountPrice, setAmountPrice] = useRecoilState(amountPriceState)
+  const discountCoupon = useRecoilValue(discountCouponState)
+
+  useEffect(() => {
+    const amount = totalPrice - discountCoupon
+    setAmountPrice(amount)
+  }, [discountCoupon])
 
   return (
     <div className="p-3">
@@ -25,7 +31,7 @@ const Bill = () => {
           </div>
           <div className="flex justify-between pb-1 text-orange-600">
             <div>Giảm giá:</div>
-            <div>{formatNumber(0)}</div>
+            <div>{formatNumber(discountCoupon)}</div>
           </div>
           <div className="flex justify-between pb-1">
             <div className="font-bold">Số tiền phải thanh toán:</div>

@@ -59,7 +59,7 @@ const Infomation = () => {
     .then(res => {
       if (res.status == 200) {
         let data = {
-          phone_number: res.data.data.number,
+          phone_number: formatPhoneNumber(res.data.data.number),
           avatar: userInfo.avatar,
           name: userInfo.name,
           zalo_id: userInfo.id
@@ -99,6 +99,13 @@ const Infomation = () => {
     } catch(error) {
       console.log(error, "Error login storecake")
     }
+  }
+
+  const formatPhoneNumber = (phone) => {
+    phone = phone.replace(/\D/g, "");
+    if (phone.startsWith("84")) phone = "0" + phone.slice(2)
+    if (phone.length === 9 && phone.startsWith("3")) phone = "0" + phone
+    return phone
   }
 
   useEffect(()=> {

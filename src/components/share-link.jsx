@@ -57,7 +57,7 @@ const ShareLink = () => {
         </div>
        
       </div>
-      <div className="flex justify-between pt-4 mx-4">
+      <div className="flex justify-around pt-4 mx-4">
         <div className="flex flex-col items-center" onClick={copyToClipboard}>
           <CopySimple size={18} color="#000" weight="fill" />
           <div className="text-[12px] font-medium pt-2">Sao chép link</div>

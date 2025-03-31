@@ -1,4 +1,5 @@
 import { atom, selector, useRecoilValue, useSetRecoilState } from "recoil"
+import { getApi } from "../utils/request"
 
 export const memberZaloState = atom({
   key: "memberZalo",
@@ -20,3 +21,15 @@ export const customerState = atom({
   key: "customer",
   default: {}
 })
+
+export const memberStore = (type, payload = {}) => {
+  const getMemberShip = async () => {
+    return await getApi("/membership", {params: payload})
+  }
+
+  const obj = {
+    getMemberShip
+  }
+
+  return obj[type](payload)
+}

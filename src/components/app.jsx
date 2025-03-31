@@ -21,6 +21,8 @@ import Blog from '../pages/blog';
 
 import settings from '../../app-settings.json'
 import Article from '../pages/blog/article';
+import Membership from '../pages/membership';
+import Coupon from '../pages/coupon';
 
 const MyApp = () => {
   localStorage.removeItem('isAuth')
@@ -64,6 +66,8 @@ const MyApp = () => {
             <Route path="/contact" element={<Contact />}></Route>
             <Route path="/blog" element={<Blog />}></Route>
             <Route path="/blog/article" element={<Article />}></Route>
+            <Route path="/membership" element={<Membership />}></Route>
+            <Route path="/coupon" element={<Coupon />}></Route>
           </AnimationRoutes>
           <FooterCustom />
         </ZMPRouter>

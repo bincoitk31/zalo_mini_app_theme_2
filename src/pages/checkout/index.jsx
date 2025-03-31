@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { useRecoilValue, useRecoilState, useSetRecoilState } from "recoil"
-import { customerInfoState, cartItemsState, totalPriceState, amountPriceState } from "../../recoil/order"
-import { Button, Input, message, Select } from "antd"
+import { customerInfoState, cartItemsState, totalPriceState, amountPriceState, discountCouponState } from "../../recoil/order"
+import { Button, Input, message, Select, Space, ConfigProvider } from "antd"
 import { postApi } from "../../utils/request"
 import { formatNumber } from "../../utils/formatNumber"
 import { useNavigate } from "react-router-dom"
@@ -11,6 +11,7 @@ import { memberZaloState, phoneMemberZaloState, customerState } from "../../reco
 import { AirplaneTilt, Package, User, MapPinLine, Plus } from '@phosphor-icons/react'
 import { listAddressState, openAddAddressState } from "../../recoil/order"
 import { Payment, events, EventName } from "zmp-sdk/apis"
+import { couponStore } from "../../recoil/coupon"
 
 import CartItems from "../../components/cart-items"
 import Bill from "../../components/bill"
@@ -31,18 +32,16 @@ const Checkout = () => {
   const [customerInfo, setCustomerInfo] = useRecoilState(customerInfoState)
   const [cartItems, setCartItems] = useRecoilState(cartItemsState)
   const [listAddress, setListAddress] = useRecoilState(listAddressState)
+  const [discountCoupon, setDiscountCoupon] = useRecoilState(discountCouponState)
   const [loadingOrder, setLoadingOrder] = useState(false)
   const [provinces, setProvinces] = useState({})
   const [districts, setDistricts] = useState({})
   const [communes, setCommunes] = useState({})
   const [provinceId, setProvinceId] = useState()
   const [districtId, setDistrictId] = useState()
-  const [communeId, setCommuneId] = useState()
-  const [fullName, setFullName] = useState(customer ?.name)
-  const [phoneNumber, setPhoneNumber] = useState(customer ?.phone_number)
-  const [email, setEmail] = useState()
-  const [detectAddress, setDetectAddress] = useState()
   const [note, setNote] = useState()
+  const [couponName, setCouponName] = useState()
+  const [coupon, setCoupon] = useState()
 
   const renderProvince = () => {
     if(!window.WebAddress[country_id]) return
@@ -141,7 +140,15 @@ const Checkout = () => {
       shipping_address: {...customerInfo, note: note},
       zalo_order_id: zalo_order_id,
       location: `https://zalo.me/s/${import.meta.env.VITE_APP_ID}/`,
-      customer: customer
+      customer: customer,
+      form_data: {
+        coupon: {
+          value: coupon
+        },
+        phone_number: {
+          value: customerInfo ?.phone_number
+        }
+      }
     }
 
 
@@ -183,12 +190,11 @@ const Checkout = () => {
           }`,
       ) // trả về mảng dữ liệu dạng [{key=value}, ...]
       .join("&"); // chuyển về dạng string kèm theo "&", ví dụ: amount={amount}&desc={desc}&extradata={extradata}&item={item}&method={method}
-  
+
       // Tạo overall mac từ dữ liệu
-      console.log(dataMac, "dataMaccc")
+
       let mac = CryptoJS.HmacSHA256(dataMac, privateKey).toString()
-      console.log(mac, "macc")
-      
+
       Payment.createOrder({
         desc: `Thanh toán ${totalPrice}`,
         item: setItemsZalo(),
@@ -202,13 +208,10 @@ const Checkout = () => {
         }),
         mac: mac,
         success: (data) => {
-          console.log(data, "dtaaaaa")
           // Tạo đơn hàng thành công
           // Hệ thống tự động chuyển sang trang thanh toán.
           const { orderId } = data;
-          console.log(orderId);
           createOrder(orderId)
-         
         },
         fail: (err) => {
           // Tạo đơn hàng lỗi
@@ -217,7 +220,7 @@ const Checkout = () => {
          
         },
       });
-      
+
     }
 
   const afterSubmitSuccess = () => {
@@ -228,52 +231,69 @@ const Checkout = () => {
     message.success("Đặt hàng thành công")
   }
 
-  const handleChangeProvince = (value, option) => {
-    if (value != provinceId) {
-      setCommuneId(null)
-      setDistrictId(null)
-      setCommunes([])
-      setDistricts([])
-    }
-    setProvinceId(value)
-  }
-
-  const handleChangeDistrict = (value, option) => {
-    if (value != districtId) {
-      setCommuneId(null)
-      setCommunes([])
-    }
-    setDistrictId(value)
-  }
-
-  const handleChangeCommune = (value, option) => {
-    setCommuneId(value)
-  }
-
-  const handleChange = (key, value) => {
-    switch(key) {
-      case 'full_name':
-        setFullName(value)
-        break
-      case 'phone_number':
-        const formatPhone = value.replace(/\D/g, "");
-        setPhoneNumber(formatPhone)
-        break
-      case 'email':
-        setEmail(value)
-        break
-      case 'note':
-        setNote(value)
-        break
-      case 'detect_address':
-        setDetectAddress(value)
-      break
-
-    }
-  }
-
   const goTo = (path) => {
     navigate(path)
+  }
+
+  const findCoupon = () => {
+    let params = {
+      name: couponName,
+      total_price: totalPrice,
+      phone_number: customerInfo ?.phone_number
+    }
+
+    couponStore('findCouponByName', params)
+    .then(res => {
+      if (res.status == 200) {
+        if (res.data.data.message) {
+          let reason = res.data.data.reason
+          setDiscountCoupon(0)
+          setCoupon()
+          switch(res.data.data.message) {
+            case "coupon_000":
+              message.error("Mã khuyến mãi không tồn tại")
+              break
+            case "coupon_001":
+              message.error("Mã khuyến mãi đã được sử dụng")
+              break
+            case "coupon_002":
+              message.error("Mã khuyến mãi không hợp lệ")
+              break
+            case "coupon_003":
+              message.error("Mã khuyến mãi hết hạn sử dụng")
+              break
+            case "coupon_004":
+              const [, min] = reason.split('Minimum order value ')
+              message.error(`Giá trị đơn này tối thiểu ${formatNumber(min)}`)
+              break
+            case "coupon_005":
+              const [, max] = reason.split('Maximum order value ')
+              message.error(`Giá trị đơn này tối đa ${formatNumber(max)}`)
+              break
+            case "coupon_006":
+              message.error("Khách hàng vượt quá số lần sử dụng")
+              break
+            case "coupon_007":
+              message.error("Chỉ áp dụng với khách hàng mới")
+              break
+            case "coupon_008":
+              message.error("Vui lòng điền đủ thông tin để nhận khuyến mãi")
+              break
+          }
+        } else {
+          calcDiscountCoupon(res.data.data)
+          message.success("Áp dụng voucher thành công")
+        }
+      }
+    })
+  }
+
+  const calcDiscountCoupon = (coupon) => {
+    const { discount = 0, is_percent, max_discount_by_percent = 0 } = coupon?.promo_code_info || {}
+    let value = is_percent ? max_discount_by_percent < Math.floor(totalPrice * discount / 100) && max_discount_by_percent != 0 ? max_discount_by_percent : Math.floor(totalPrice * discount / 100) : discount
+
+    setDiscountCoupon(value)
+    setCoupon(coupon)
   }
 
   useEffect(() => {
@@ -301,8 +321,7 @@ const Checkout = () => {
       const path = data?.path;
       // kiểm tra path trả về từ giao dịch thanh toán
       // RedirectPath: đã cung cấp tại trang khai báo phương thức
-      
-      console.log(data, "OpenAppppp")
+
       if (path.includes(RedirectPath)) {
         // Nếu đúng với RedirectPath đã cũng cấp, thực hiện redirect tới path được nhận
         // Kiểm tra giao dịch bằng API checkTransaction nếu muốn
@@ -369,12 +388,12 @@ const Checkout = () => {
       </div>
 
       <div className="p-3 border-b-[8px] border-b-solid border-b-[#efefef]">
-        { customerInfo 
+        { customerInfo
         ?
         <div>
           <div className="flex justify-between">
             <div className="font-bold">Thông tin người nhận hàng</div>
-            <div onClick={() => goTo('/address')}>Thay đổi</div>
+            <div className="text-[12px]" onClick={() => goTo('/address')}>Thay đổi</div>
           </div>
           <div>
             <div className="flex pt-2">
@@ -406,107 +425,6 @@ const Checkout = () => {
         }
       </div>
 
-      {/* <div className="">
-
-        <CartItems />
-        <div className="my-4 border-b-2 border-solid border-[#bcbcbc]"></div>
-        <div className="px-2">
-          <div className="flex justify-between pb-1">
-            <div>Tổng tiền: </div>
-            <div>{formatNumber(totalPrice)}</div>
-          </div>
-          <div className="flex justify-between pb-1">
-            <div>Giảm giá đơn hàng:</div>
-            <div>{formatNumber(0)}</div>
-          </div>
-          <div className="flex justify-between pb-1">
-            <div className="font-bold">Số tiền phải thanh toán:</div>
-            <div>{formatNumber(amountPrice)}</div>
-          </div>
-        </div>
-        <div className="my-4 border-b-2 border-solid border-[#bcbcbc]"></div>
-      </div> */}
-      {/* <div className="px-2">
-        <div className="text-[18px] font-bold">Thông tin giao hàng</div>
-        <div className="bg-[#fff] p-2">
-          <Input
-            className="mb-2"
-            placeholder="Họ và tên"
-            size="large"
-            onChange={e => handleChange('full_name', e.target.value)}
-            value={fullName}
-          />
-          <Input
-            className="mb-2"
-            placeholder="Số điện thoại"
-            size="large"
-            onChange={e => handleChange('phone_number', e.target.value)}
-            value={phoneNumber}
-          />
-          <Input
-            className="mb-2"
-            placeholder="Email"
-            size="large"
-            onChange={e => handleChange('email', e.target.value)}
-            value={email}
-          />
-          <div className="mb-2">
-            <Select 
-              className="w-full h-10"
-              placeholder="Chọn Tỉnh/ Thành phố"
-              options={provinces}
-              value={provinceId}
-              onChange={handleChangeProvince}
-            /> 
-          </div>
-          <div className="mb-2">
-            <Select
-              value={districtId}
-              className="w-full h-10"
-              placeholder="Chọn Quận/ Huyện"
-              options={districts}
-              onChange={handleChangeDistrict}
-            />
-          </div>
-
-          <div className="mb-2">
-            <Select
-              value={communeId}
-              className="w-full h-10"
-              placeholder="Chọn Phường/ Xã"
-              options={communes}
-              onChange={handleChangeCommune}
-            />
-          </div>
-
-          <Input
-            className="mb-2"
-            placeholder="Địa chỉ chi tiết"
-            size="large"
-            onChange={e => handleChange('detect_address', e.target.value)}
-            value={detectAddress}
-          />
-          <Input
-            className="mb-2"
-            placeholder="Ghi chú"
-            size="large"
-            onChange={e => handleChange('note', e.target.value)}
-            value={note}
-          />
-
-        </div>
-      </div> */}
-
-      {/* <div className="px-2 my-2">
-        <Button
-          loading={loadingOrder}
-          type="primary"
-          className="w-full h-10"
-          onClick={() => handleOrder()}>
-          Hoàn thành đơn hàng
-        </Button>
-      </div> */}
-
       <div className="p-3 border-b border-b-solid border-b-[#dcdcdc]">
         <div className="font-bold">Sản phẩm đã chọn ({cartItems.length || 0})</div>
         <CartItems />
@@ -515,6 +433,30 @@ const Checkout = () => {
         <div className="flex justify-between items-center">
           <div className="font-bold">Ghi chú</div>
           <div>...</div>
+        </div>
+      </div>
+      <div className="p-3 border-b border-b-solid border-b-[#dcdcdc]">
+        <div className="flex justify-between items-center mb-2">
+          <div className="font-bold">Chọn mã giảm giá</div>
+          <div className="text-[12px]" onClick={() => goTo("/coupon")}>Xem tất cả</div>
+        </div>
+        <div className=" flex justify-center items-center">
+        <ConfigProvider
+           theme={{
+            components: {
+              Input: {
+                activeBorderColor: '#d9d9d9',
+                hoverBorderColor: '#d9d9d9',
+                activeShadow: '#d9d9d9'
+              }
+            }
+           }}
+        >
+          <Space.Compact style={{ width: '100%' }}>
+            <Input placeholder="Nhập mã khuyến mãi" value={couponName} onChange={e => setCouponName(e.target.value)} />
+            <Button className="font-medium" color="default" variant="solid" onClick={() => findCoupon()}>Áp dụng</Button>
+          </Space.Compact>
+        </ConfigProvider>
         </div>
       </div>
       <PaymentMethod />
@@ -530,7 +472,7 @@ const Checkout = () => {
         <div className="">
           <div className="flex justify-between pb-3">
             <div className="font-bold">Tổng thanh toán:</div>
-            <div className="font-bold">{formatNumber(totalPrice)}</div>
+            <div className="font-bold">{formatNumber(amountPrice)}</div>
           </div>
           <div className="flex w-full">
             <Button disabled={cartItems.length == 0 ? true : false} color="default" variant="solid" className="w-full h-[36px] my-2 font-medium rounded-[4px]" onClick={handleOrder}> Đặt hàng</Button>

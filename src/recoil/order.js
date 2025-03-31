@@ -39,3 +39,8 @@ export const editAddressState = atom({
   key: "editAddress",
   default: null
 })
+
+export const discountCouponState = atom({
+  key: 'discountCoupon',
+  default: 0
+})

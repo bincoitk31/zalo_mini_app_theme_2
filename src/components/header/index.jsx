@@ -55,6 +55,8 @@ const HeaderCustom = () => {
       "/history-order": "history-order",
       "/contact": "contact",
       "/blog": "blog",
+      "/membership": "membership",
+      "/coupon": "coupon"
     };
     setActiveTab(tabMapping[location.pathname] || "home");
   }, [location])
@@ -229,6 +231,30 @@ const HeaderCustom = () => {
             <div className="text-[#fff] text-[14px] flex items-center">
               <CaretLeft onClick={goBack} size={20} color="#ffffff" weight="light" />
               <div className="font-bold">Bài viết</div>
+            </div>
+          </div>
+        </div>
+      }
+
+      {
+        activeTab == 'membership' &&
+        <div className="fixed w-full z-[999]">
+          <div className="flex bg-[#000] p-2">
+            <div className="text-[#fff] text-[14px] flex items-center">
+              <CaretLeft onClick={goBack} size={20} color="#ffffff" weight="light" />
+              <div className="font-bold">Hạng thành viên</div>
+            </div>
+          </div>
+        </div>
+      }
+
+      {
+        activeTab == 'coupon' &&
+        <div className="fixed w-full z-[999]">
+          <div className="flex bg-[#000] p-2">
+            <div className="text-[#fff] text-[14px] flex items-center">
+              <CaretLeft onClick={goBack} size={20} color="#ffffff" weight="light" />
+              <div className="font-bold">Ưu đãi của tôi</div>
             </div>
           </div>
         </div>
