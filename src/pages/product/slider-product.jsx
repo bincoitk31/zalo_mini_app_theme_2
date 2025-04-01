@@ -52,7 +52,7 @@ const SliderProduct = ({images, product}) => {
         <div className="absolute bottom-0 right-4 bg-[#00000080] text-[12px] text-[#fff] px-2 rounded-t-[4px]">
           {current + 1} / {images.length}
         </div>
-        <div onClick={(e) => shareCurrentPage(e)} className="flex items-center justify-center absolute top-2 right-4 bg-[#00000080] px-2 rounded-[4px] w-[32px] h-[32px]"><ShareNetwork size={20} color="#fff" /></div>
+        <div onClick={(e) => shareCurrentPage(e)} className="flex items-center justify-center absolute top-2 right-4 bg-[#00000080] px-2 rounded-[4px] w-[40px] h-[40px]"><ShareNetwork size={22} color="#fff" /></div>
       </div>
       
       <Modal
