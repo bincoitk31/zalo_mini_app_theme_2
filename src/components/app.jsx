@@ -39,7 +39,7 @@ const MyApp = () => {
     console.log(script, "scripttt")
 
     document.head.appendChild(script);
-    
+    console.log("vaoooooooo")
     // Xóa thẻ script khi component bị unmount
     return () => {
       document.head.removeChild(script);

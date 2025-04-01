@@ -63,10 +63,10 @@ const HeaderCustom = () => {
 
   useEffect(() => {
     const page = document.querySelector('.zaui-page')
-    page.addEventListener("scroll", handleScroll)
+    if (page) page.addEventListener("scroll", handleScroll)
 
     return () => {
-      page.removeEventListener("scroll", handleScroll)
+      if (page) page.removeEventListener("scroll", handleScroll)
     };
   }, []);
 

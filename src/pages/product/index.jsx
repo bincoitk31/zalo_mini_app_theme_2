@@ -94,6 +94,8 @@ const Product = () => {
     }
   }
 
+  
+
   useEffect(() => {
     console.log("attributeSelected updated:", attributeSelected);
   }, [attributeSelected]);
@@ -108,6 +110,7 @@ const Product = () => {
       if (res.status == 200) {
         const product = res.data.product
         setProductView(product)
+        console.log(product, "producttttttt")
       }
     })
   }, [id])
@@ -115,11 +118,12 @@ const Product = () => {
   return (
     <>
       <div className="mt-[36px] overflow-y-auto bg-[#fff] h-[calc(100vh-89px)]" >
-        <SliderProduct images={ productView && productView ?.variations ? productView.variations[0].images : []} />
+        <SliderProduct product={productView} images={ productView && productView ?.variations ? productView.variations[0].images : []} />
 
         <div className="px-2">
           <div className="mt-2 font-medium text-[18px]">{productView ?.name}</div>
           <div className="font-medium">{getRetailPrice()}</div>
+
           <Description product={productView ||{}}/>
         </div>
       </div>
