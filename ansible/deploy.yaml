@@ -1,15 +1,15 @@
 - name: Deploy
-  hosts: zalo_mini_app
+  hosts: zalo_mini_app_theme_2
   tasks:
     - name: Git Pull
-      ansible.builtin.shell: cd zalo_mini_app && git pull origin master
+      ansible.builtin.shell: cd zalo_mini_app_theme_2 && git pull origin master
 
     - name: NPM Install
-      command: bash -lc "cd zalo_mini_app && sudo npm install"
+      command: bash -lc "cd zalo_mini_app_theme_2 && sudo npm install"
 
 - name: Restart
-  hosts: zalo_mini_app
+  hosts: zalo_mini_app_theme_2
   serial: 1
   tasks:
     - name: Restart
-      command: bash -lc "pm2 restart zalo-mini-app --update-env"
+      command: bash -lc "pm2 restart theme-2 --update-env"

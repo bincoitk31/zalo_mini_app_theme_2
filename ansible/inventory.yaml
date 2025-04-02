@@ -1,4 +1,4 @@
-zalo_mini_app:
+zalo_mini_app_theme_2:
   hosts:
     citusdb:
       ansible_host: 10.1.5.180
