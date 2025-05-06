@@ -185,6 +185,7 @@ app.post('/api/create_app', async (req, res) => {
     zaloAppId: "2053551167336882761", // optional
   });
   console.log(appId, appName, error, message)
+  res.json({appId, appName, error, message})
 })
 
 app.listen(port, '0.0.0.0',() => {
