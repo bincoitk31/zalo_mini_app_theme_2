@@ -169,7 +169,6 @@ app.post('/api/create_app', async (req, res) => {
   const client = new PartnerClient(
     "97771a9d-16ac-4de7-a6ec-d5fe7419fe1d",
     "1133",
-    proxy, // optional
   );
 
   console.log(client, "clienttttt")
