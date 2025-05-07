@@ -160,21 +160,13 @@ async function runDeployment(command, description, app_id, access_token) {
 
 app.post('/api/create_app', async (req, res) => {
   console.log("vaoooo")
-  // Setup client
-  const proxy = {
-    host: "10.50.173.232",
-    port: 254,
-  };
 
   const client = new PartnerClient(
     "97771a9d-16ac-4de7-a6ec-d5fe7419fe1d",
-    "1133",
-    proxy, // optional
+    1133,
   );
 
   console.log(client, "clienttttt")
-
-  // client.setProxy(proxy);
 
   const { appId, appName, error, message } = await client.createMiniApp({
     appName: "storecake test 3",
