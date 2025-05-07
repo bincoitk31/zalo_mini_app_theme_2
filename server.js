@@ -173,7 +173,7 @@ app.post('/api/create_app', async (req, res) => {
 
   console.log(client, "clienttttt")
 
-  client.setProxy(proxy);
+  //client.setProxy(proxy);
 
   const { appId, appName, error, message } = await client.createMiniApp({
     appName: "storecake test 3",
