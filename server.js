@@ -2,10 +2,14 @@ const express = require('express');
 const { spawn, exec } = require('child_process');
 const fs = require('fs');
 require('dotenv').config();
-const { PartnerClient, AppCategory } = require("zmp-openapi-nodejs")
+const { PartnerClient, AppCategory, listPaymentChannels } = require("zmp-openapi-nodejs")
 
 const app = express();
 const port = 3002;
+const client = new PartnerClient(
+  "97771a9d-16ac-4de7-a6ec-d5fe7419fe1d",
+  "1133",
+)
 
 app.use(express.json()); // To parse JSON request bodies
 
@@ -158,26 +162,36 @@ async function runDeployment(command, description, app_id, access_token) {
   });
 }
 
-app.post('/api/create_app', async (req, res) => {
+app.post('/api/create_zalo_mini_app', async (req, res) => {
   console.log("vaoooo")
-
-  const client = new PartnerClient(
-    "97771a9d-16ac-4de7-a6ec-d5fe7419fe1d",
-    1133,
-  );
-
-  console.log(client, "clienttttt")
-
+  const { name, description, category, logo } = req.body
+   
   const { appId, appName, error, message } = await client.createMiniApp({
-    appName: "storecake test 3",
-    appDescription: "Mini App Description",
-    appCategory: AppCategory.DEMO,
-    appLogoUrl: "https://logo-mapps.zdn.vn/default?v=2.0",
-    browsable: true,
-    zaloAppId: "2053551167336882761", // optional
+    appName: name,
+    appDescription: description,
+    appCategory: category,
+    appLogoUrl: logo,
+    browsable: true
   });
   console.log(appId, appName, error, message)
-  res.json({appId, appName, error, message})
+  if (error != 0) {
+    res.status(400).json({error: error, message: message})
+  } else {
+    // const { error_payment, message_payment } = await client.updatePaymentSetting({
+    //   miniAppId: appId,
+    //   callbackUrl: "https://api.storecake.io/api/v1/zalo_mini_app/callback",
+    //   sandboxCallbackUrl: "https://api.storecake.io/api/v1/zalo_mini_app/callback",
+    // });
+    res.status(200).json({appId, appName})
+  }
+})
+
+app.post('/api/test', async (req, res) => {
+
+  const { paymentChannels, error, message } = await client.listPaymentChannels({
+    miniAppId: "2583693547572750764",
+  });
+  res.json({paymentChannels, error, message})
 })
 
 app.listen(port, '0.0.0.0',() => {
