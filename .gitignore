@@ -40,3 +40,6 @@ www/
 #package
 package-lock.json
 app-settings.json
+
+#build zip
+build.zip

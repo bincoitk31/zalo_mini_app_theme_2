@@ -2,7 +2,7 @@ const express = require('express');
 const { spawn, exec } = require('child_process');
 const fs = require('fs');
 require('dotenv').config();
-const { PartnerClient, AppCategory, listPaymentChannels } = require("zmp-openapi-nodejs")
+const { PartnerClient, createMiniApp, updatePaymentSetting, createPaymentChannel, deployMiniApp } = require("zmp-openapi-nodejs")
 
 const app = express();
 const port = 3002;
@@ -158,32 +158,56 @@ async function runDeployment(command, description, app_id, access_token) {
         }
       })
 
-      
   });
 }
 
 app.post('/api/create_zalo_mini_app', async (req, res) => {
   console.log("vaoooo")
   const { name, description, category, logo } = req.body
-   
-  const { appId, appName, error, message } = await client.createMiniApp({
+
+  const res_create_mini_app = await client.createMiniApp({
     appName: name,
     appDescription: description,
     appCategory: category,
     appLogoUrl: logo,
     browsable: true
   });
-  console.log(appId, appName, error, message)
-  if (error != 0) {
-    res.status(400).json({error: error, message: message})
-  } else {
-    // const { error_payment, message_payment } = await client.updatePaymentSetting({
-    //   miniAppId: appId,
-    //   callbackUrl: "https://api.storecake.io/api/v1/zalo_mini_app/callback",
-    //   sandboxCallbackUrl: "https://api.storecake.io/api/v1/zalo_mini_app/callback",
-    // });
-    res.status(200).json({appId, appName})
+  console.log(res_create_mini_app, "res_create_mini_app")
+  if (res_create_mini_app.error != 0) {
+    return res.status(400).json({error: res_create_mini_app.error, message: res_create_mini_app.message})
   }
+
+  const app_id = res_create_mini_app.appId
+  const res_payment = await client.updatePaymentSetting({
+    miniAppId: app_id,
+    callbackUrl: "https://api.storecake.io/api/v1/zalo_mini_app/callback",
+    sandboxCallbackUrl: "https://api.storecake.io/api/v1/zalo_mini_app/callback",
+    status: "ACTIVE",
+  });
+  console.log(res_payment, "res_payment")
+
+  if (res_payment.error != 0) {
+    return res.status(400).json({error: res_payment.error, message: res_payment.message})
+  }
+
+  console.log(res_payment.error, "app_id")
+
+  const data = {
+    method: "COD",
+    miniAppId: app_id,
+    status: "ACTIVE",
+    notifyUrl: "https://api.storecake.io/api/v1/zalo_mini_app/callback",
+    redirectPath: "/"
+  }
+
+  const res_create_payment_channel = await client.createPaymentChannel(data);
+  console.log(res_create_payment_channel, "res_create_payment_channel")
+
+  if (res_create_payment_channel.error != 0) {
+    return res.status(400).json({error: res_create_payment_channel.error, message: res_create_payment_channel.message})
+  }
+
+  res.status(200).json({appId: res_create_mini_app.appId, appName: res_create_mini_app.appName, privateKey: res_payment.privateKey })
 })
 
 app.post('/api/test', async (req, res) => {
@@ -193,6 +217,87 @@ app.post('/api/test', async (req, res) => {
   });
   res.json({paymentChannels, error, message})
 })
+
+app.post('/api/deploy', async (req, res) => {
+  const { createReadStream } = require('fs')
+  const { env, description, app_id, site_id, zalo_oa_id, zalo_private_key, settings, name } = req.body
+
+  try {
+    // Kiểm tra các tham số bắt buộc
+    if (!app_id || !name || !description) {
+      return res.status(400).json({ error: 1, message: "miniAppId, name, description is required" });
+    }
+
+    // thêm env
+    process.env.VITE_SITE_ID = site_id
+    process.env.VITE_ZALO_OA_ID = zalo_oa_id
+    process.env.VITE_APP_ID = app_id
+    process.env.VITE_ZALO_PRIVATE_KEY = zalo_private_key
+    process.env.VITE_ENV = env
+
+    //write settings to app-settings.json
+    fs.writeFileSync('app-settings.json', JSON.stringify(settings, null, 2), 'utf8');
+
+    //run build
+    const isBuildSuccess = await runBuild()
+    if (!isBuildSuccess) {
+      return res.status(400).json({message: "Build failed" });
+    }
+    // clean env
+    cleanEnv()
+
+    // Tạo read stream với buffer size phù hợp
+    const file = createReadStream("build.zip");
+
+    const { versionId, entrypoint, error, message } = await client.deployMiniApp({
+      miniAppId: app_id,
+      file,
+      name,
+      description,
+    });
+
+    if (error !== 0) {
+      return res.status(400).json({ error, message });
+    }
+
+    res.status(200).json({
+      versionId,
+      entrypoint,
+      message: "Deploy successful"
+    });
+  } catch (err) {
+    console.error('Deploy error:', err);
+    res.status(500).json({ error: 1, message: err.message });
+  }
+});
+
+async function runBuild() {
+  exec('zmp run build:zip', (error, stdout, stderr) => {
+    if (error) {
+      console.error('Error running build:', error);
+      return false
+    }
+    console.log('Build successful:', stdout);
+    return true
+  });
+}
+
+function cleanEnv() {
+  exec("rm -rf .env", (error, stdout, stderr) => {
+    if (error) {
+      console.error(`❌ Lỗi khi xóa .env: ${error.message}`);
+      return;
+    }
+    delete process.env.APP_ID
+    delete process.env.VITE_SITE_ID
+    delete process.env.VITE_ZALO_SECRET_KEY
+    delete process.env.VITE_ZALO_OA_ID
+    delete process.env.VITE_ZALO_PRIVATE_KEY
+    delete process.env.VITE_ENV
+
+    fs.writeFileSync('app-settings.json', JSON.stringify({}, null, 2), 'utf8');
+  })
+}
 
 app.listen(port, '0.0.0.0',() => {
   console.log(`Server running at http://localhost:${port}`);
