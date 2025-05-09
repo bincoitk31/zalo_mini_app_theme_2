@@ -28,6 +28,7 @@ app.post('/api/run_command', (req, res) => {
   process.env.VITE_APP_ID = app_id
   process.env.VITE_ZALO_PRIVATE_KEY = zalo_private_key
   process.env.VITE_ENV = env
+  process.env.APP_ID = app_id
 
   //write settings to app-settings.json
 
@@ -163,14 +164,17 @@ async function runDeployment(command, description, app_id, access_token) {
 
 app.post('/api/create_zalo_mini_app', async (req, res) => {
   console.log("vaoooo")
-  const { name, description, category, logo } = req.body
+  const { name, description, category, logo, subCategory } = req.body
+
+  console.log(req.body, "req.bodyyyyy")
 
   const res_create_mini_app = await client.createMiniApp({
     appName: name,
     appDescription: description,
     appCategory: category,
     appLogoUrl: logo,
-    browsable: true
+    browsable: true,
+    appSubCategory: subCategory
   });
   console.log(res_create_mini_app, "res_create_mini_app")
   if (res_create_mini_app.error != 0) {
@@ -234,13 +238,12 @@ app.post('/api/deploy', async (req, res) => {
     process.env.VITE_APP_ID = app_id
     process.env.VITE_ZALO_PRIVATE_KEY = zalo_private_key
     process.env.VITE_ENV = env
-
+    process.env.APP_ID = app_id
     //write settings to app-settings.json
     fs.writeFileSync('app-settings.json', JSON.stringify(settings, null, 2), 'utf8');
 
     //run build
     const isBuildSuccess = await runBuild()
-    console.log(isBuildSuccess, "222222")
     if (!isBuildSuccess) {
       return res.status(400).json({message: "Build failed" });
     }
@@ -275,7 +278,6 @@ app.post('/api/deploy', async (req, res) => {
 async function runBuild() {
   return new Promise((resolve, reject) => {
     exec('npm run build:zip', (error, stdout, stderr) => {
-      console.log("111111")
       if (error) {
         console.error('Error running build:', error);
         reject(error);
@@ -290,7 +292,6 @@ async function runBuild() {
 async function cleanEnv() {
   return new Promise((resolve, reject) => {
     exec("rm -rf .env", (error, stdout, stderr) => {
-      console.log("333333")
       if (error) {
         console.error(`❌ Lỗi khi xóa .env: ${error.message}`);
         reject(error);
