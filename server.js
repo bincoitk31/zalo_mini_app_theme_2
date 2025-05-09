@@ -83,11 +83,11 @@ async function runDeployment(command, description, app_id, access_token) {
             isAppIdEntered = true
           }
 
-          // Chọn Login Method, tự động chọn "Login with App Access Token"
-          if (text.includes("Choose a Login Method") && !isLoginMethodSelected) {
-            loginProcess.stdin.write("2\n");
-            isLoginMethodSelected = true
-          }
+        // Chọn Login Method, tự động chọn "Login with App Access Token"
+        if (text.includes("Choose a Login Method") && !isLoginMethodSelected) {
+          loginProcess.stdin.write("2\n");
+          isLoginMethodSelected = true;
+        }
 
           // Nhập "access token"
           if (text.includes("Zalo Access Token:") && !isAccessTokenEntered) {
@@ -111,8 +111,8 @@ async function runDeployment(command, description, app_id, access_token) {
           // Chạy lệnh `zmp deploy`
           const deployProcess = spawn("zmp", ["deploy"]);
 
-          // Lưu trữ output từ terminal
-          let output = "";
+        // Lưu trữ output từ terminal
+        let output = "";
 
           // Xử lý dữ liệu đầu ra từ quá trình
           deployProcess.stdout.on("data", (data) => {
@@ -186,9 +186,9 @@ app.post('/api/create_zalo_mini_app', async (req, res) => {
   });
   console.log(res_payment, "res_payment")
 
-  if (res_payment.error != 0) {
-    return res.status(400).json({error: res_payment.error, message: res_payment.message})
-  }
+    if (res_payment.error != 0) {
+      return res.status(400).json({ error: res_payment.error, message: res_payment.message });
+    }
 
   console.log(res_payment.error, "app_id")
 
@@ -240,11 +240,12 @@ app.post('/api/deploy', async (req, res) => {
 
     //run build
     const isBuildSuccess = await runBuild()
+    console.log(isBuildSuccess, "222222")
     if (!isBuildSuccess) {
       return res.status(400).json({message: "Build failed" });
     }
     // clean env
-    cleanEnv()
+    await cleanEnv()
 
     // Tạo read stream với buffer size phù hợp
     const file = createReadStream("build.zip");
@@ -272,33 +273,42 @@ app.post('/api/deploy', async (req, res) => {
 });
 
 async function runBuild() {
-  exec('zmp run build:zip', (error, stdout, stderr) => {
-    if (error) {
-      console.error('Error running build:', error);
-      return false
-    }
-    console.log('Build successful:', stdout);
-    return true
+  return new Promise((resolve, reject) => {
+    exec('npm run build:zip', (error, stdout, stderr) => {
+      console.log("111111")
+      if (error) {
+        console.error('Error running build:', error);
+        reject(error);
+        return;
+      }
+      console.log('Build successful:', stdout);
+      resolve(true);
+    });
   });
 }
 
-function cleanEnv() {
-  exec("rm -rf .env", (error, stdout, stderr) => {
-    if (error) {
-      console.error(`❌ Lỗi khi xóa .env: ${error.message}`);
-      return;
-    }
-    delete process.env.APP_ID
-    delete process.env.VITE_SITE_ID
-    delete process.env.VITE_ZALO_SECRET_KEY
-    delete process.env.VITE_ZALO_OA_ID
-    delete process.env.VITE_ZALO_PRIVATE_KEY
-    delete process.env.VITE_ENV
+async function cleanEnv() {
+  return new Promise((resolve, reject) => {
+    exec("rm -rf .env", (error, stdout, stderr) => {
+      console.log("333333")
+      if (error) {
+        console.error(`❌ Lỗi khi xóa .env: ${error.message}`);
+        reject(error);
+        return;
+      }
+      delete process.env.APP_ID;
+      delete process.env.VITE_SITE_ID;
+      delete process.env.VITE_ZALO_SECRET_KEY;
+      delete process.env.VITE_ZALO_OA_ID;
+      delete process.env.VITE_ZALO_PRIVATE_KEY;
+      delete process.env.VITE_ENV;
 
-    fs.writeFileSync('app-settings.json', JSON.stringify({}, null, 2), 'utf8');
-  })
+      fs.writeFileSync('app-settings.json', JSON.stringify({}, null, 2), 'utf8');
+      resolve();
+    });
+  });
 }
 
-app.listen(port, '0.0.0.0',() => {
+app.listen(port, '0.0.0.0', () => {
   console.log(`Server running at http://localhost:${port}`);
 });
