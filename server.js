@@ -232,6 +232,15 @@ app.post('/api/get_versions', async (req, res) => {
   res.status(200).json({versions, total, error, message})
 })
 
+app.post('/api/publish', async (req, res) => {
+  const { app_id, version_id } = req.body
+  const { error, message } = await client.publishMiniApp({
+    miniAppId: app_id,
+    versionId: version_id,
+  })
+  res.status(200).json({error, message})
+})
+
 app.post('/api/deploy', async (req, res) => {
   const { createReadStream } = require('fs')
   const { env, description, app_id, site_id, zalo_oa_id, zalo_private_key, settings, name } = req.body
