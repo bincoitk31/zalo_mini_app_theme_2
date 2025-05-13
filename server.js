@@ -211,11 +211,10 @@ app.post('/api/create_zalo_mini_app', async (req, res) => {
     return res.status(400).json({error: res_create_payment_channel.error, message: res_create_payment_channel.message})
   }
 
-  res.status(200).json({appId: res_create_mini_app.appId, appName: res_create_mini_app.appName, privateKey: res_payment.privateKey })
+  res.status(200).json({appId: res_create_mini_app.appId, appName: res_create_mini_app.appName, privateKey: res_payment.paymentSetting.privateKey })
 })
 
 app.post('/api/test', async (req, res) => {
-
   const { paymentChannels, error, message } = await client.listPaymentChannels({
     miniAppId: "2583693547572750764",
   });
