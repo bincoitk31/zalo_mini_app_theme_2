@@ -2,7 +2,7 @@ const express = require('express');
 const { spawn, exec } = require('child_process');
 const fs = require('fs');
 require('dotenv').config();
-const { PartnerClient, createMiniApp, updatePaymentSetting, createPaymentChannel, deployMiniApp } = require("zmp-openapi-nodejs")
+const { PartnerClient, createMiniApp, updatePaymentSetting, createPaymentChannel, deployMiniApp, listCategories } = require("zmp-openapi-nodejs")
 
 const app = express();
 const port = 3002;
@@ -215,10 +215,9 @@ app.post('/api/create_zalo_mini_app', async (req, res) => {
 })
 
 app.post('/api/test', async (req, res) => {
-  const { paymentChannels, error, message } = await client.listPaymentChannels({
-    miniAppId: "2583693547572750764",
-  });
-  res.json({paymentChannels, error, message})
+  const { categories, total, error, message } = await client.listCategories();
+  console.log(categories, "categories")
+  res.json({categories, total, error, message})
 })
 
 app.post('/api/get_versions', async (req, res) => {
