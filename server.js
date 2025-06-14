@@ -106,7 +106,7 @@ app.post('/api/upsert_payment_channels', async (req, res) => {
         let data = {...channel, channelId: paymentChannel.channelId}
         const { channelId, error, message } = await client.updatePaymentChannel(data);
       } else {
-        let data = {...channel}
+        let data = {...channel, miniAppId: mini_app_id, status: "ACTIVE"}
         console.log(data, "dataaaaa")
         const { channelId, error, message } = await client.createPaymentChannel(data);
         console.log(channelId, "channelId")
