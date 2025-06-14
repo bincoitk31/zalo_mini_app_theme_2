@@ -100,23 +100,28 @@ app.post('/api/upsert_payment_channels', async (req, res) => {
   console.log(error, "error")
   console.log(message, "message")
   if (error != 0) return res.status(400).json({error, message})
-    payment_channels.map(async (channel) => {
+    const results = await Promise.all(payment_channels.map(async (channel) => {
       const paymentChannel = paymentChannels.find(c => c.method === channel.method)
       if (paymentChannel) {
         let data = {...channel, channelId: paymentChannel.channelId}
+        console.log(data, "dataaaaa1111")
         const { channelId, error, message } = await client.updatePaymentChannel(data);
+        console.log(channelId, "channelId1111")
+        console.log(error, "error1111")
+        console.log(message, "message1111")
+        return { channelId, error, message }
       } else {
         let data = {...channel, miniAppId: mini_app_id, status: "ACTIVE"}
-        console.log(data, "dataaaaa")
+        console.log(data, "dataaaaa2222")
         const { channelId, error, message } = await client.createPaymentChannel(data);
-        console.log(channelId, "channelId")
+        console.log(channelId, "channelId2222")
         console.log(error, "error2222")
         console.log(message, "message2222")
-      
+        return { channelId, error, message }
       }
-    })
+    }))
 
-    res.status(200).json({error, message})
+    res.status(200).json({results, error, message})
 })
 
 app.post('/api/deploy', async (req, res) => {
