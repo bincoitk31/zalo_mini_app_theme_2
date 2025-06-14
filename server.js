@@ -2,7 +2,7 @@ const express = require('express');
 const { spawn, exec } = require('child_process');
 const fs = require('fs');
 require('dotenv').config();
-const { PartnerClient, createMiniApp, updatePaymentSetting, createPaymentChannel, deployMiniApp, listCategories } = require("zmp-openapi-nodejs")
+const { PartnerClient, createMiniApp, updatePaymentSetting, createPaymentChannel, deployMiniApp, listCategories, listPaymentChannels, updatePaymentChannel } = require("zmp-openapi-nodejs")
 
 const app = express();
 const port = 3002;
@@ -88,6 +88,24 @@ app.post('/api/publish', async (req, res) => {
     versionId: version_id,
   })
   res.status(200).json({error, message})
+})
+
+app.post('/api/upsert_payment_channels', async (req, res) => {
+  const { mini_app_id, payment_channels } = req.body
+  const { paymentChannels, error, message } = await client.listPaymentChannels({
+    miniAppId: mini_app_id,
+  });
+  if (error != 0) return res.status(400).json({error, message})
+    payment_channels.map(async (channel) => {
+      const paymentChannel = paymentChannels.find(c => c.method === channel.method)
+      if (paymentChannel) {
+        let data = {...channel, channelId: paymentChannel.channelId}
+        const { channelId, error, message } = await client.updatePaymentChannel(data);
+      } else {
+        let data = {...channel}
+        const { channelId, error, message } = await client.createPaymentChannel(data);
+      }
+    })
 })
 
 app.post('/api/deploy', async (req, res) => {
