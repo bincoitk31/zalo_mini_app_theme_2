@@ -1,7 +1,7 @@
 const express = require('express');
 const { spawn, exec } = require('child_process');
 const fs = require('fs');
-const axios = require('axios');
+
 require('dotenv').config();
 const { PartnerClient, createMiniApp, updatePaymentSetting, createPaymentChannel, deployMiniApp, listCategories, listPaymentChannels, updatePaymentChannel } = require("zmp-openapi-nodejs")
 
@@ -104,13 +104,9 @@ app.post('/api/upsert_payment_channels', async (req, res) => {
     const results = await Promise.all(payment_channels.map(async (channel) => {
       const paymentChannel = paymentChannels.find(c => c.method === channel.method)
       if (channel.method == "CUSTOM") {
-        axios.get(channel.thumbnail, { responseType: 'stream' })
-        .then(response => {
-          response.data.pipe(fs.createWriteStream('thumbnail.png'));
-          channel.thumbnail = 'thumbnail.png'
-        });
+        channel.thumbnail =  fs.createReadStream('./src/assets/images/storecake.webp')
       }
-
+      console.log(channel, "channelllllll")
       if (paymentChannel) {
         let data = {...channel, channelId: paymentChannel.id,  miniAppId: mini_app_id}
         console.log(data, "dataaaaa1111")
@@ -129,16 +125,6 @@ app.post('/api/upsert_payment_channels', async (req, res) => {
         return { channelId, error, message }
       }
     }))
-
-    const bin = {
-        key1: '1',
-        key2: '1',
-        merchantId: '1',
-        method: 'ZALOPAY_SANDBOX',
-        miniAppId: '2484018188571193268',
-        status: 'ACTIVE',
-        redirectPath: '/'
-    }
 
     res.status(200).json({results, error, message})
 })
