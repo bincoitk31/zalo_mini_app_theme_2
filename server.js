@@ -1,7 +1,7 @@
 const express = require('express');
 const { spawn, exec } = require('child_process');
 const fs = require('fs');
-const got = require('got');
+const axios = require('axios');
 require('dotenv').config();
 const { PartnerClient, createMiniApp, updatePaymentSetting, createPaymentChannel, deployMiniApp, listCategories, listPaymentChannels, updatePaymentChannel } = require("zmp-openapi-nodejs")
 
@@ -104,10 +104,11 @@ app.post('/api/upsert_payment_channels', async (req, res) => {
     const results = await Promise.all(payment_channels.map(async (channel) => {
       const paymentChannel = paymentChannels.find(c => c.method === channel.method)
       if (channel.method == "CUSTOM") {
-        const stream = got.stream(channel.thumbnail);
-        stream.pipe(require('fs').createWriteStream('thumbnail.png'));
-        channel.thumbnail = 'thumbnail.png'
-        console.log(channel, "channel")
+        axios.get(channel.thumbnail, { responseType: 'stream' })
+        .then(response => {
+          response.data.pipe(fs.createWriteStream('thumbnail.png'));
+          channel.thumbnail = 'thumbnail.png'
+        });
       }
 
       if (paymentChannel) {
