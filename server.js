@@ -96,32 +96,34 @@ app.post('/api/upsert_payment_channels', async (req, res) => {
   const { paymentChannels, error, message } = await client.listPaymentChannels({
     miniAppId: mini_app_id,
   });
-  console.log(req.body, "req.bodyyyyy")
-  console.log(paymentChannels, "paymentChannels")
-  console.log(error, "error")
-  console.log(message, "message")
+ 
   if (error != 0) return res.status(400).json({error, message})
+    const inactive_payment_channels = paymentChannels.filter(c => !payment_channels.find(p => p.method == c.method && p.isSandbox == c.isSandbox))
+    console.log(inactive_payment_channels, "inactive_payment_channels")
+    const results_inactive = await Promise.all(inactive_payment_channels.map(async (channel) => {
+      const { channelId, error, message } = await client.updatePaymentChannel({
+        ...channel,
+        channelId: channel.id,
+        status: "INACTIVE"
+      })
+      return { channelId, error, message }
+    }))
+
+    console.log(results_inactive, "results_inactive")
+
+    if (error != 0) return res.status(400).json({error, message})
     const results = await Promise.all(payment_channels.map(async (channel) => {
       const paymentChannel = paymentChannels.find(c => c.method === channel.method)
       if (channel.method == "CUSTOM") {
         channel.thumbnail =  fs.createReadStream('./src/assets/images/storecake.webp')
       }
-      console.log(channel, "channelllllll")
       if (paymentChannel) {
         let data = {...channel, channelId: paymentChannel.id,  miniAppId: mini_app_id}
-        console.log(data, "dataaaaa1111")
         const { channelId, error, message } = await client.updatePaymentChannel(data);
-        console.log(channelId, "channelId1111")
-        console.log(error, "error1111")
-        console.log(message, "message1111")
         return { channelId, error, message }
       } else {
         let data = {...channel, miniAppId: mini_app_id, status: "ACTIVE", redirectPath: "/"}
-        console.log(data, "dataaaaa2222")
         const { channelId, error, message } = await client.createPaymentChannel(data);
-        console.log(channelId, "channelId2222")
-        console.log(error, "error2222")
-        console.log(message, "message2222")
         return { channelId, error, message }
       }
     }))

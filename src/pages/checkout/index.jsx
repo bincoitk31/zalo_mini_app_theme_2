@@ -17,8 +17,11 @@ import CartItems from "../../components/cart-items"
 import Bill from "../../components/bill"
 import PaymentMethod from "../../components/payment-method"
 import CryptoJS from "crypto-js";
+import settings from "../../../app-settings.json"
 
 const Checkout = () => {
+  const PAYMENT_METHODS = settings ?.payment_methods || []
+
   const setActiveTab = useSetRecoilState(activeTabState)
   const totalPrice = useRecoilValue(totalPriceState)
   const amountPrice = useRecoilValue(amountPriceState)
@@ -171,10 +174,10 @@ const Checkout = () => {
       // extradata:{
       //   myTransactionId: id
       // },
-      method: {
-        id: "COD",
-        isCustom: false,
-      }
+      // method: {
+      //   id: "COD",
+      //   isCustom: false,
+      // }
     }
   
     const privateKey = import.meta.env.VITE_ZALO_PRIVATE_KEY
@@ -202,10 +205,10 @@ const Checkout = () => {
         // extradata: JSON.stringify({
         //   myTransactionId: id // transaction id riêng của hệ thống của bạn
         // }),
-        method: JSON.stringify({
-          id: "COD", // Phương thức thanh toán
-          isCustom: false, // false: Phương thức thanh toán của Platform, true: Phương thức thanh toán riêng của đối tác
-        }),
+        // method: JSON.stringify({
+        //   id: "COD", // Phương thức thanh toán
+        //   isCustom: false, // false: Phương thức thanh toán của Platform, true: Phương thức thanh toán riêng của đối tác
+        // }),
         mac: mac,
         success: (data) => {
           // Tạo đơn hàng thành công
@@ -294,6 +297,15 @@ const Checkout = () => {
 
     setDiscountCoupon(value)
     setCoupon(coupon)
+  }
+
+  const renderPaymentMethods = () => {
+    return PAYMENT_METHODS.map(method => {
+      return {
+        id: method,
+        isCustom: method == "storecake" ? true : false
+      }
+    })
   }
 
   useEffect(() => {
