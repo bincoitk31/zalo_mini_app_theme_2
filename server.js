@@ -96,20 +96,23 @@ app.post('/api/upsert_payment_channels', async (req, res) => {
   const { paymentChannels, error, message } = await client.listPaymentChannels({
     miniAppId: mini_app_id,
   });
- 
+  
+  console.log(paymentChannels, "paymentChannels111")
+  console.log(payment_channels, "payment_channels222")
+
   if (error != 0) return res.status(400).json({error, message})
     const inactive_payment_channels = paymentChannels.filter(c => !payment_channels.find(p => p.method == c.method && p.isSandbox == c.isSandbox))
     console.log(inactive_payment_channels, "inactive_payment_channels")
-    const results_inactive = await Promise.all(inactive_payment_channels.map(async (channel) => {
-      const { channelId, error, message } = await client.updatePaymentChannel({
-        ...channel,
-        channelId: channel.id,
-        status: "INACTIVE"
-      })
-      return { channelId, error, message }
-    }))
+    // const results_inactive = await Promise.all(inactive_payment_channels.map(async (channel) => {
+    //   const { channelId, error, message } = await client.updatePaymentChannel({
+    //     ...channel,
+    //     channelId: channel.id,
+    //     status: "INACTIVE"
+    //   })
+    //   return { channelId, error, message }
+    // }))
 
-    console.log(results_inactive, "results_inactive")
+    // console.log(results_inactive, "results_inactive")
 
     if (error != 0) return res.status(400).json({error, message})
     const results = await Promise.all(payment_channels.map(async (channel) => {
