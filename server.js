@@ -101,7 +101,7 @@ app.post('/api/upsert_payment_channels', async (req, res) => {
   console.log(payment_channels, "payment_channels222")
 
   if (error != 0) return res.status(400).json({error, message})
-    const inactive_payment_channels = paymentChannels.filter(c => !payment_channels.find(p => p.method == c.method && p.isSandbox == c.isSandbox))
+    const inactive_payment_channels = paymentChannels.filter(c => !payment_channels.find(p => p.method == c.method))
     console.log(inactive_payment_channels, "inactive_payment_channels")
     // const results_inactive = await Promise.all(inactive_payment_channels.map(async (channel) => {
     //   const { channelId, error, message } = await client.updatePaymentChannel({
