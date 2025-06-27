@@ -67,9 +67,11 @@ app.post('/api/create_zalo_mini_app', async (req, res) => {
 })
 
 app.post('/api/test', async (req, res) => {
-  const { categories, total, error, message } = await client.listCategories();
-  console.log(categories, "categories")
-  res.json({categories, total, error, message})
+  const { paymentChannels, error, message } = await client.listPaymentChannels({
+    miniAppId: "2484018188571193268",
+  });
+  console.log(paymentChannels, "paymentChannels")
+  res.status(200).json({paymentChannels, error, message})
 })
 
 app.post('/api/get_versions', async (req, res) => {
@@ -96,13 +98,42 @@ app.post('/api/upsert_payment_channels', async (req, res) => {
   const { paymentChannels, error, message } = await client.listPaymentChannels({
     miniAppId: mini_app_id,
   });
-  
+
   console.log(paymentChannels, "paymentChannels111")
   console.log(payment_channels, "payment_channels222")
 
+  // "payment_channels" => [
+  //   %{
+  //     "displayName" => "COD",
+  //     "isSandbox" => true,
+  //     "method" => "COD",
+  //     "thumbnail" => "https://content.pancake.vn/1/s700x700/fwebp0/47/5d/8a/32/205d0cff4110716026077e6d7bd721d05a365a3fcb17c34cd579adbb.png"
+  //   },
+  //   %{
+  //     "accessKey" => "4321",
+  //     "method" => "MOMO_SANDBOX",
+  //     "partnerCode" => "1234",
+  //     "publicKey" => nil,
+  //     "secretKey" => "1234"
+  //   },
+  //   %{
+  //     "key1" => "1234",
+  //     "key2" => "4321",
+  //     "merchantAppId" => "idzalopay",
+  //     "method" => "ZALOPAY_SANDBOX"
+  //   },
+  //   %{
+  //     "customMethod" => "STORECAKE",
+  //     "displayName" => "Storecake",
+  //     "isSandbox" => true,
+  //     "method" => "CUSTOM",
+  //     "thumbnail" => "https://content.pancake.vn/1/s700x700/fwebp0/47/5d/8a/32/205d0cff4110716026077e6d7bd721d05a365a3fcb17c34cd579adbb.png"
+  //   }
+  // ]
+
   if (error != 0) return res.status(400).json({error, message})
-    const inactive_payment_channels = paymentChannels.filter(c => !payment_channels.find(p => p.method == c.method))
-    console.log(inactive_payment_channels, "inactive_payment_channels")
+    // const inactive_payment_channels = paymentChannels.filter(c => !payment_channels.find(p => p.method == c.method))
+    // console.log(inactive_payment_channels, "inactive_payment_channels")
     // const results_inactive = await Promise.all(inactive_payment_channels.map(async (channel) => {
     //   const { channelId, error, message } = await client.updatePaymentChannel({
     //     ...channel,
