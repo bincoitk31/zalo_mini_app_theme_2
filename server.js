@@ -102,48 +102,110 @@ app.post('/api/upsert_payment_channels', async (req, res) => {
   console.log(paymentChannels, "paymentChannels111")
   console.log(payment_channels, "payment_channels222")
 
-  // "payment_channels" => [
-  //   %{
-  //     "displayName" => "COD",
-  //     "isSandbox" => true,
-  //     "method" => "COD",
-  //     "thumbnail" => "https://content.pancake.vn/1/s700x700/fwebp0/47/5d/8a/32/205d0cff4110716026077e6d7bd721d05a365a3fcb17c34cd579adbb.png"
+  // const payment_channels = [
+  //   {
+  //     "displayName": "COD",
+  //     "isSandbox": true,
+  //     "method": "COD",
+  //     "thumbnail": "https://content.pancake.vn/1/s700x700/fwebp0/47/5d/8a/32/205d0cff4110716026077e6d7bd721d05a365a3fcb17c34cd579adbb.png"
   //   },
-  //   %{
-  //     "accessKey" => "4321",
-  //     "method" => "MOMO_SANDBOX",
-  //     "partnerCode" => "1234",
-  //     "publicKey" => nil,
-  //     "secretKey" => "1234"
+  //   {
+  //     "accessKey": "4321",
+  //     "method": "MOMO_SANDBOX",
+  //     "partnerCode": "1234",
+  //     "publicKey": null,
+  //     "secretKey": "1234"
   //   },
-  //   %{
-  //     "key1" => "1234",
-  //     "key2" => "4321",
-  //     "merchantAppId" => "idzalopay",
-  //     "method" => "ZALOPAY_SANDBOX"
+  //   {
+  //     "key1": "1234",
+  //     "key2": "4321",
+  //     "merchantAppId": "idzalopay",
+  //     "method": "ZALOPAY_SANDBOX"
   //   },
-  //   %{
-  //     "customMethod" => "STORECAKE",
-  //     "displayName" => "Storecake",
-  //     "isSandbox" => true,
-  //     "method" => "CUSTOM",
-  //     "thumbnail" => "https://content.pancake.vn/1/s700x700/fwebp0/47/5d/8a/32/205d0cff4110716026077e6d7bd721d05a365a3fcb17c34cd579adbb.png"
+  //   {
+  //     "customMethod": "STORECAKE",
+  //     "displayName": "Storecake",
+  //     "isSandbox": true,
+  //     "method": "CUSTOM",
+  //     "thumbnail": "https://content.pancake.vn/1/s700x700/fwebp0/47/5d/8a/32/205d0cff4110716026077e6d7bd721d05a365a3fcb17c34cd579adbb.png"
   //   }
   // ]
 
-  if (error != 0) return res.status(400).json({error, message})
-    // const inactive_payment_channels = paymentChannels.filter(c => !payment_channels.find(p => p.method == c.method))
-    // console.log(inactive_payment_channels, "inactive_payment_channels")
-    // const results_inactive = await Promise.all(inactive_payment_channels.map(async (channel) => {
-    //   const { channelId, error, message } = await client.updatePaymentChannel({
-    //     ...channel,
-    //     channelId: channel.id,
-    //     status: "INACTIVE"
-    //   })
-    //   return { channelId, error, message }
-    // }))
 
-    // console.log(results_inactive, "results_inactive")
+  // paymentchanel = [
+  //     {
+  //        thumbnail: 'https://stc-zmp.zadn.vn/payment/cod.png',
+  //        method: 'COD',
+  //        isCustom: false,
+  //        name: 'Thanh toán khi nhận hàng',
+  //        redirectPath: '/',
+  //        id: 7388,
+  //        isSandbox: false,
+  //        status: 'ACTIVE'
+  //     },
+  //     {
+  //        thumbnail: 'https://stc-zmp.zadn.vn/payment/momo.png',
+  //        method: 'MOMO_SANDBOX',
+  //        isCustom: false,
+  //        name: 'Ví Momo - Sandbox',
+  //        id: 7628,
+  //        isSandbox: true,
+  //        status: 'ACTIVE'
+  //     },
+  //     {
+  //        thumbnail: 'https://stc-zmp.zadn.vn/payment/vnpay.png',
+  //        method: 'VNPAY_SANDBOX',
+  //        isCustom: false,
+  //        name: 'Ví VNPay - Sandbox',
+  //        redirectPath: '/',
+  //        id: 7630,
+  //        isSandbox: true,
+  //        status: 'ACTIVE'
+  //     },
+  //     {
+  //        thumbnail: 'https://stc-zmp.zadn.vn/payment/zalopay.png',
+  //        method: 'ZALOPAY_SANDBOX',
+  //        isCustom: false,
+  //        name: 'Ví ZaloPay - Sandbox',
+  //        redirectPath: '/',
+  //        id: 7637,
+  //        isSandbox: true,
+  //        status: 'ACTIVE'
+  //     },
+  //     {
+  //        thumbnail: 'https://stc-zmp.zadn.vn/payment/zalopay.png',
+  //        method: 'ZALOPAY',
+  //        isCustom: false,
+  //        name: 'Ví ZaloPay',
+  //        redirectPath: '/',
+  //        id: 7627,
+  //        isSandbox: false,
+  //        status: 'INACTIVE'
+  //     },
+  //     {
+  //        thumbnail: 'https://logo-mapps.zdn.vn/8a7ad52d73689a36c379.jpg',
+  //        method: 'STORECAKE',
+  //        name: 'Storecake',
+  //        isCustom: true,
+  //        id: 1001056,
+  //        isSandbox: true,
+  //        status: 'ACTIVE'
+  //     }
+  //    ]
+
+  if (error != 0) return res.status(400).json({error, message})
+    const inactive_payment_channels = paymentChannels.filter(c => !payment_channels.find(p => p.method == c.method || p.customMethod == c.method) && c.status == "ACTIVE")
+    console.log(inactive_payment_channels, "inactive_payment_channels")
+    const results_inactive = await Promise.all(inactive_payment_channels.map(async (channel) => {
+      const { channelId, error, message } = await client.updatePaymentChannel({
+        ...channel,
+        channelId: channel.id,
+        status: "INACTIVE"
+      })
+      return { channelId, error, message }
+    }))
+
+    console.log(results_inactive, "results_inactive")
 
     if (error != 0) return res.status(400).json({error, message})
     const results = await Promise.all(payment_channels.map(async (channel) => {
