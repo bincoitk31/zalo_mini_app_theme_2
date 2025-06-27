@@ -200,7 +200,8 @@ app.post('/api/upsert_payment_channels', async (req, res) => {
       const { channelId, error, message } = await client.updatePaymentChannel({
         ...channel,
         channelId: channel.id,
-        status: "INACTIVE"
+        status: "INACTIVE",
+        miniAppId: mini_app_id
       })
       return { channelId, error, message }
     }))
@@ -209,7 +210,7 @@ app.post('/api/upsert_payment_channels', async (req, res) => {
 
     if (error != 0) return res.status(400).json({error, message})
     const results = await Promise.all(payment_channels.map(async (channel) => {
-      const paymentChannel = paymentChannels.find(c => c.method === channel.method)
+      const paymentChannel = paymentChannels.find(c => c.method === channel.method || c.method === channel.customMethod)
       if (channel.method == "CUSTOM") {
         channel.thumbnail =  fs.createReadStream('./src/assets/images/storecake.webp')
       }
