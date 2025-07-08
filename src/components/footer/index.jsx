@@ -41,6 +41,9 @@ const FooterCustom = (props) => {
       case "member":
         navigate("/member")
         break
+      case "qr-tcb":
+        navigate("/qr-tcb")
+        break
     }
   }
 
@@ -89,6 +92,7 @@ const FooterCustom = (props) => {
                 <User size={24} color={location.pathname == '/member' ? '#292929' : '#797979'} weight="light" />
                 <div className={location.pathname == "/member" ? 'text-[#292929] text-[12px]' : 'text-[#797979]  text-[12px]'}>Cá nhân</div>
               </div>
+              <div onClick={() => goTo("qr-tcb")} className="flex-1 flex flex-col items-center">Test</div>
             </div>
           </div>
         </div>

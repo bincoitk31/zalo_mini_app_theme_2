@@ -93,6 +93,14 @@ app.post('/api/publish', async (req, res) => {
   res.status(200).json({error, message})
 })
 
+app.post('/api/get_payment_channels', async (req, res) => {
+  const { mini_app_id } = req.body
+  const { paymentChannels, error, message } = await client.listPaymentChannels({
+    miniAppId: mini_app_id,
+  });
+  res.status(200).json({paymentChannels, error, message})
+})
+
 app.post('/api/upsert_payment_channels', async (req, res) => {
   const { mini_app_id, payment_channels } = req.body
   const { paymentChannels, error, message } = await client.listPaymentChannels({

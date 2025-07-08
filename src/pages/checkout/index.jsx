@@ -211,15 +211,14 @@ const Checkout = () => {
         // }),
         mac: mac,
         success: (data) => {
-          // Tạo đơn hàng thành công
-          // Hệ thống tự động chuyển sang trang thanh toán.
+          // Tạo đơn hàng thành công, Hệ thống tự động chuyển sang trang thanh toán.
           const { orderId } = data;
           createOrder(orderId)
         },
         fail: (err) => {
           // Tạo đơn hàng lỗi
           setLoadingOrder(false)
-          console.log(err);
+          console.log("Lỗi tạo đơn hàng zalo", err);
          
         },
       });
